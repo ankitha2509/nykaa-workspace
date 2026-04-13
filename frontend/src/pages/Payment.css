@@ -1,0 +1,146 @@
+
+.payment-page {
+  display: flex;
+  gap: 30px;
+  padding: 40px;
+  background: #f7f7f7;
+  min-height: 100vh;
+  font-family: "Segoe UI", sans-serif;
+}
+
+.payment-left {
+  flex: 2;
+  background: white;
+  padding: 25px;
+  border-radius: 16px;
+}
+
+.payment-left h2 {
+  margin-bottom: 5px;
+}
+
+.subtitle {
+  color: #777;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.payment-options {
+  margin-bottom: 20px;
+}
+
+.option {
+  border: 1px solid #ddd;
+  padding: 14px;
+  border-radius: 12px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: 0.3s ease;
+  font-weight: 500;
+}
+
+.option span {
+  display: block;
+  font-size: 12px;
+  color: #888;
+  margin-top: 3px;
+}
+
+.option:hover {
+  border-color: #fc2779;
+}
+
+.option.active {
+  border-color: #fc2779;
+  background: #fff0f6;
+}
+
+
+.upi-box {
+  margin-top: 20px;
+  text-align: center;
+  padding: 15px;
+  border: 1px dashed #ddd;
+  border-radius: 12px;
+}
+
+.upi-box img {
+  margin: 10px 0;
+}
+
+
+.card-box {
+  margin-top: 20px;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 12px;
+}
+
+
+.StripeElement {
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+}
+
+
+.place-btn {
+  width: 100%;
+  padding: 15px;
+  margin-top: 25px;
+  background: linear-gradient(90deg, #fc2779, #ff5c8d);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.place-btn:hover {
+  transform: scale(1.02);
+  box-shadow: 0 6px 20px rgba(252, 39, 121, 0.4);
+}
+
+.payment-right {
+  flex: 1;
+}
+
+.card {
+  background: white;
+  padding: 15px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+  box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+}
+
+.card h4 {
+  margin-bottom: 10px;
+}
+
+
+.bag-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 8px;
+}
+
+.bag-item img {
+  width: 45px;
+  height: 45px;
+  border-radius: 8px;
+  object-fit: cover;
+}
+
+.card p {
+  font-size: 14px;
+  margin: 3px 0;
+}
+
+@media (max-width: 768px) {
+  .payment-page {
+    flex-direction: column;
+  }
+}

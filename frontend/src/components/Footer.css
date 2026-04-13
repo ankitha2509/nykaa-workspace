@@ -1,0 +1,127 @@
+
+.footer-title {
+  background: white;
+  padding: 20px 80px;
+  font-size: 20px;
+  font-weight: 600;
+  color: #111;
+}
+
+.footer-top-section {
+  background: black;
+  color: white;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 30px 80px;
+}
+
+.footer-box {
+  display: flex;
+  align-items: flex-start;
+  gap: 15px;
+  width: 30%;
+}
+
+.footer-icon {
+  font-size: 22px;
+  margin-top: 5px;
+}
+
+.footer-heading {
+  font-size: 14px;
+  margin-bottom: 8px;
+}
+
+.subscribe-box {
+  display: flex;
+}
+
+.subscribe-box input {
+  padding: 8px;
+  width: 180px;
+  border: none;
+  outline: none;
+}
+
+.subscribe-box button {
+  background: #fc2779;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+}
+
+.subscribe-box button:hover {
+  background: #e91e63;
+}
+
+.app-links {
+  display: flex;
+  gap: 10px;
+}
+
+.app-links a {
+  background: gray;
+  color: white;
+  padding: 6px 10px;
+  font-size: 12px;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.app-links a:hover {
+  background: #fc2779;
+}
+
+.phone-number {
+  font-size: 18px;
+  margin: 5px 0;
+}
+
+.timing {
+  font-size: 12px;
+  color: #ccc;
+} 
+
+
+.footer-middle {
+  background: lightgray;
+  padding: 40px 80px;
+}
+
+
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 40px;
+}
+
+
+.footer-logo {
+  width: 100px;
+  margin-bottom: 15px;
+}
+
+
+.footer-col h4 {
+  font-size: 15px;
+  margin-bottom: 12px;
+  color: #111;
+}
+
+
+.footer-col p {
+  font-size: 13px;
+  color: #555;
+  margin: 6px 0;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.footer-col p:hover {
+  color: #fc2779;
+  transform: translateX(3px);
+}

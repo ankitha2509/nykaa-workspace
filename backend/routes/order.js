@@ -1,0 +1,63 @@
+const express = require("express");
+const router = express.Router();
+
+const Order = require("../models/Order");
+const Cart = require("../models/Cart");
+
+router.post("/create/:userId", async (req, res) => {
+  try {
+    const userId = req.params.userId;
+
+    const { name, phone, address1, address2, city, pincode, paymentMethod } = req.body;
+
+    const fullAddress = `${address1}, ${address2}, ${city} - ${pincode}`;
+
+    const cartItems = await Cart.find({ userId }).populate("productId");
+
+    if (cartItems.length === 0) {
+      return res.status(400).json({ message: "Cart is empty" });
+    }
+
+    let total = 0;
+
+    const items = cartItems.map(item => {
+      total += item.productId.price * item.quantity;
+
+      return {
+        productId: item.productId._id,
+        quantity: item.quantity,
+      };
+    });
+
+    const order = new Order({
+      userId,
+      name,
+      phone,
+      address: fullAddress,
+      items,
+      totalAmount: total,
+      paymentMethod, // 🔥 important
+    });
+
+    await order.save();
+
+    await Cart.deleteMany({ userId });
+
+    res.json({ message: "Order placed successfully 🎉" });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Error placing order" });
+  }
+});
+
+
+// GET USER ORDERS
+router.get("/:userId", async (req, res) => {
+  const orders = await Order.find({ userId: req.params.userId })
+    .populate("items.productId");
+
+  res.json(orders);
+});
+
+module.exports = router;

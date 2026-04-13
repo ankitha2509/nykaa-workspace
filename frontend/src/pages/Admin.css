@@ -1,0 +1,76 @@
+* {
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+.admin-login-wrapper {
+  display: flex;
+  height: 100vh;
+  width: 100%;
+}
+
+.admin-login-left {
+  width: 50%;
+  background-color: #972c55; 
+}
+
+.admin-login-right {
+  width: 50%;
+  background-color: white;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding-left: 120px;
+  
+}
+
+.admin-login-content {
+  width: 350px;
+  text-align: center;
+}
+
+.nykaa-logo {
+  width: 120px;
+  margin-bottom: 20px;
+}
+
+.admin-login-content h2 {
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.otp-row {
+  margin-bottom: 20px;
+}
+
+.otp-row input {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  font-size: 14px;
+  transition: 0.3s;
+}
+
+.otp-row input:focus {
+  border-color: #ff3f6c;
+  outline: none;
+  box-shadow: 0 0 5px rgba(255, 63, 108, 0.3);
+}
+
+.submit-btn {
+  width: 100%;
+  padding: 12px;
+  background-color: #ff3f6c;
+  color: white;
+  border-radius: 6px;
+  cursor: pointer;
+  font-weight: bold;
+  transition: 0.3s;
+}
+
+.submit-btn:hover {
+  background-color: #e6335f;
+  transform: scale(1.02);
+}

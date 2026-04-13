@@ -1,0 +1,78 @@
+.otp-wrapper {
+  display: flex;
+  height: 100vh;
+}
+
+.otp-left {
+  flex: 1;
+  background-color: #972c55;
+}
+
+.otp-right {
+  flex: 1;
+  position: relative;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.skip {
+  position: absolute;
+  top: 25px;
+  right: 40px;
+  color: #fc2779;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+.nykaa-logo {
+  width: 90px;
+  margin-bottom: 20px;
+}
+
+.otp-card {
+  width: 300px;
+  text-align: center;
+}
+
+.otp-box-container {
+  display: flex;
+  justify-content: space-between;
+  margin: 20px 0;
+}
+
+.otp-box {
+  width: 40px;
+  height: 45px;
+  font-size: 18px;
+  text-align: center;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+}
+
+.verify-btn {
+  width: 100%;
+  padding: 10px;
+  background: #fc2779;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.error-text {
+  color: red;
+  font-size: 14px;
+}
+
+.resend {
+  margin-top: 10px;
+  color: #fc2779;
+  cursor: pointer;
+}
+
+.terms {
+  font-size: 12px;
+  margin-top: 15px;
+  color: gray;
+}

@@ -1,0 +1,48 @@
+.add-product-container {
+  padding: 40px;
+  font-family: Arial, sans-serif;
+}
+
+.add-product-container h2 {
+  margin-bottom: 25px;
+  color: #333;
+}
+
+.product-form {
+  width: 450px;
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.product-form input,
+.product-form select,
+.product-form textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 14px;
+}
+
+.product-form textarea {
+  height: 100px;
+  resize: none;
+}
+
+.product-form input[type="file"] {
+  border: none;
+}
+
+.product-form button {
+  padding: 12px;
+  border: none;
+  background-color: #ff3f6c;
+  color: white;
+  font-size: 15px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.product-form button:hover {
+  background-color: #e6335f;
+}

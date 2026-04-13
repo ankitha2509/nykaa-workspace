@@ -1,0 +1,137 @@
+
+.profile-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #fff0f6, #ffe3ec);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40px 20px;
+}
+
+.profile-card {
+  width: 100%;
+  max-width: 950px;
+  background: #ffffff;
+  border-radius: 24px;
+  padding: 45px;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.08);
+  transition: 0.3s ease;
+}
+
+.profile-card:hover {
+  transform: translateY(-4px);
+}
+
+
+.profile-title {
+  text-align: center;
+  font-size: 30px;
+  font-weight: 700;
+  color: #fc2779;
+  margin-bottom: 35px;
+}
+
+
+.profile-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 22px;
+}
+
+.full-width {
+  grid-column: span 2;
+}
+
+
+.profile-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.profile-group label {
+  font-size: 13px;
+  margin-bottom: 6px;
+  color: #555;
+  font-weight: 500;
+}
+
+.profile-group input,
+.profile-group select,
+.profile-group textarea {
+  width: 100%;
+  padding: 14px;
+  border-radius: 14px;
+  border: 1px solid #e0e0e0;
+  background: #fafafa;
+  font-size: 14px;
+  transition: 0.25s ease;
+}
+
+
+.profile-group input:focus,
+.profile-group textarea:focus,
+.profile-group select:focus {
+  border-color: #fc2779;
+  background: #fff;
+  box-shadow: 0 0 0 3px rgba(252, 39, 121, 0.15);
+  transform: scale(1.02);
+  outline: none;
+}
+
+.profile-group textarea {
+  height: 110px;
+  resize: none;
+}
+
+.save-btn {
+  margin-top: 30px;
+  width: 100%;
+  padding: 16px;
+  border: none;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fc2779, #ff5ca8);
+  color: white;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.save-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 25px rgba(252, 39, 121, 0.35);
+}
+
+.profile-card {
+  animation: fadeIn 0.5s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+
+@media (max-width: 768px) {
+  .profile-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .full-width {
+    grid-column: span 1;
+  }
+
+  .profile-card {
+    padding: 25px;
+  }
+
+  .profile-title {
+    font-size: 24px;
+  }
+}
