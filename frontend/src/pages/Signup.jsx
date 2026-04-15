@@ -16,7 +16,7 @@ function Signup() {
         mode === "mobile" ? { mobile } : { email };
 
       const response = await axios.post(
-        "http://localhost:5000/api/auth/signup/send-otp",
+        "https://backend-1bfu.onrender.com/api/auth/signup/send-otp",
         payload
       );
 

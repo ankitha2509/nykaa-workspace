@@ -11,7 +11,7 @@ function Home() {
   const [currentSlide, setCurrentSlide] = useState(0);
 
   useEffect(() => {
-    fetch("http://localhost:5000/api/product/all")
+    fetch("https://backend-1bfu.onrender.com/api/product/all")
       .then((res) => res.json())
       .then((data) => setProducts(data))
       .catch((err) => console.log(err));
@@ -464,7 +464,7 @@ const brandImages = [
               onClick={() => navigate(`/product/${item._id}`)}
             >
               <img
-                src={`http://localhost:5000/${item.image}`}
+                src={`https://backend-1bfu.onrender.com/${item.image}`}
                 alt={item.name}
               />
 

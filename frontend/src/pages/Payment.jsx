@@ -21,7 +21,7 @@ function Payment() {
     const addr = JSON.parse(localStorage.getItem("selectedAddress"));
     setAddress(addr);
 
-    fetch(`http://localhost:5000/api/cart/${user._id}`)
+    fetch(`https://backend-1bfu.onrender.com/api/cart/${user._id}`)
       .then(res => res.json())
       .then(data => setCartItems(data));
   }, []);
@@ -35,7 +35,7 @@ function Payment() {
 
   const placeOrder = async () => {
 
-    const res = await fetch(`http://localhost:5000/api/order/create/${user._id}`, {
+    const res = await fetch(`https://backend-1bfu.onrender.com/api/order/create/${user._id}`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,7 +65,7 @@ function Payment() {
 
     try {
    
-      const res = await fetch("http://localhost:5000/api/payment/create-payment", {
+      const res = await fetch("https://backend-1bfu.onrender.com/api/payment/create-payment", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -196,7 +196,7 @@ function Payment() {
           <h4>Bag ({cartItems.length} Items)</h4>
           {cartItems.map(item => (
             <div className="bag-item" key={item._id}>
-              <img src={`http://localhost:5000/${item.productId.image}`} alt="" />
+              <img src={`https://backend-1bfu.onrender.com/${item.productId.image}`} alt="" />
               <span>{item.productId.name}</span>
             </div>
           ))}

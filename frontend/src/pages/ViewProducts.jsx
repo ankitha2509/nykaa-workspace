@@ -8,7 +8,7 @@ function ViewProducts() {
   const navigate = useNavigate();
 
   const fetchProducts = async () => {
-    const res = await fetch("http://localhost:5000/api/product/all");
+    const res = await fetch("https://backend-1bfu.onrender.com/api/product/all");
     const data = await res.json();
     setProducts(data);
   };
@@ -22,7 +22,7 @@ function ViewProducts() {
     const confirmDelete = window.confirm("Delete this product?");
     if (!confirmDelete) return;
 
-    await fetch(`http://localhost:5000/api/product/delete/${id}`, {
+    await fetch(`https://backend-1bfu.onrender.com/api/product/delete/${id}`, {
       method: "DELETE"
     });
 
@@ -56,7 +56,7 @@ function ViewProducts() {
 
               <td>
                 <img
-                  src={`http://localhost:5000/${product.image}`}
+                  src={`https://backend-1bfu.onrender.com/${product.image}`}
                   alt="product"
                   className="product-img"
                 />

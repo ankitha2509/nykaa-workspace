@@ -17,7 +17,7 @@ function Address() {
   });
 
   const fetchAddresses = async () => {
-    const res = await fetch(`http://localhost:5000/api/address/${userId}`);
+    const res = await fetch(`https://backend-1bfu.onrender.com/api/address/${userId}`);
     const data = await res.json();
     setAddresses(data);
   };
@@ -36,7 +36,7 @@ function Address() {
       return;
     }
 
-    await fetch("http://localhost:5000/api/address/add", {
+    await fetch("https://backend-1bfu.onrender.com/api/address/add", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",

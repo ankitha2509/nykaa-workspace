@@ -8,7 +8,7 @@ function Orders() {
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/order/${user._id}`)
+    fetch(`https://backend-1bfu.onrender.com/api/order/${user._id}`)
       .then(res => res.json())
       .then(data => setOrders(data));
   }, []);

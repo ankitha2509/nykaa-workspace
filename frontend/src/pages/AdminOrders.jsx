@@ -6,7 +6,7 @@ function AdminOrders() {
   const [orders, setOrders] = useState([]);
 
   const fetchOrders = async () => {
-    const res = await fetch("http://localhost:5000/api/order/admin/all");
+    const res = await fetch("https://backend-1bfu.onrender.com/api/order/admin/all");
     const data = await res.json();
     setOrders(data);
   };
@@ -15,9 +15,8 @@ function AdminOrders() {
     fetchOrders();
   }, []);
 
-
   const handleStatusChange = async (orderId, newStatus) => {
-    await fetch(`http://localhost:5000/api/order/update-status/${orderId}`, {
+    await fetch(`https://backend-1bfu.onrender.com/api/order/update-status/${orderId}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -66,7 +65,7 @@ function AdminOrders() {
                 <div key={index} className="item">
 
                   <img
-                    src={`http://localhost:5000/${item.productId.image}`}
+                    src={`https://backend-1bfu.onrender.com/${item.productId.image}`}
                     alt=""
                   />
 

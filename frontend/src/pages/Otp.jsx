@@ -41,7 +41,7 @@ function OTPPage() {
         : { email: value, otp: finalOtp };
 
     const response = await axios.post(
-      "http://localhost:5000/api/auth/verify-otp",
+      "https://backend-1bfu.onrender.com/api/auth/verify-otp",
       payload
     );
 

@@ -49,8 +49,8 @@ function AddProduct() {
     }
 
     const url = editProduct
-      ? `http://localhost:5000/api/product/update/${editProduct._id}`
-      : "http://localhost:5000/api/product/add";
+      ? `https://backend-1bfu.onrender.com/api/product/update/${editProduct._id}`
+      : "https://backend-1bfu.onrender.com/api/product/add";
 
     const method = editProduct ? "PUT" : "POST";
 

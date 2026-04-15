@@ -16,7 +16,7 @@ function Profile() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch(`http://localhost:5000/api/auth/user/${userId}`);
+        const res = await fetch(`https://backend-1bfu.onrender.com/api/auth/user/${userId}`);
         const data = await res.json();
 
         setForm({
@@ -44,7 +44,7 @@ function Profile() {
 
   const handleSave = async () => {
     try {
-      await fetch(`http://localhost:5000/api/auth/update/${userId}`, {
+      await fetch(`https://backend-1bfu.onrender.com/api/auth/update/${userId}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

@@ -14,7 +14,7 @@ function ProductDetails() {
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    fetch(`http://localhost:5000/api/product/${id}`)
+    fetch(`https://backend-1bfu.onrender.com/api/product/${id}`)
       .then(res => res.json())
       .then(data => setProduct(data))
       .catch(err => console.log(err));
@@ -30,7 +30,7 @@ function ProductDetails() {
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/cart/add", {
+      const res = await fetch("https://backend-1bfu.onrender.com/api/cart/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +63,7 @@ function ProductDetails() {
       <div className="details-container">
 
         <img
-          src={`http://localhost:5000/${product.image}`}
+          src={`https://backend-1bfu.onrender.com/${product.image}`}
           alt={product.name}
         />
 

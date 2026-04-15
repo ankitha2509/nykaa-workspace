@@ -15,7 +15,7 @@ function Cart() {
     try {
       if (!userId) return; 
 
-      const res = await fetch(`http://localhost:5000/api/cart/${userId}`);
+      const res = await fetch(`https://backend-1bfu.onrender.com/api/cart/${userId}`);
       const data = await res.json();
       setCartItems(data);
     } catch (err) {
@@ -32,7 +32,7 @@ function Cart() {
 
     if (newQty < 1) newQty = 1;
 
-    await fetch(`http://localhost:5000/api/cart/update/${id}`, {
+    await fetch(`https://backend-1bfu.onrender.com/api/cart/update/${id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -44,7 +44,7 @@ function Cart() {
   };
 
   const removeItem = async (id) => {
-    await fetch(`http://localhost:5000/api/cart/delete/${id}`, {
+    await fetch(`https://backend-1bfu.onrender.com/api/cart/delete/${id}`, {
       method: "DELETE",
     });
 
@@ -67,7 +67,7 @@ function Cart() {
           {cartItems.map((item) => (
             <div className="cart-item" key={item._id}>
               <div className="cart-left">
-                <img src={`http://localhost:5000/${item.productId?.image}`} />
+                <img src={`https://backend-1bfu.onrender.com/${item.productId?.image}`} />
 
                 <div>
                   <h4>{item.productId?.name}</h4>
