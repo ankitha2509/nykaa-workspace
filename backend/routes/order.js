@@ -36,7 +36,7 @@ router.post("/create/:userId", async (req, res) => {
       address: fullAddress,
       items,
       totalAmount: total,
-      paymentMethod, // 🔥 important
+      paymentMethod,
     });
 
     await order.save();
@@ -51,8 +51,6 @@ router.post("/create/:userId", async (req, res) => {
   }
 });
 
-
-// GET USER ORDERS
 router.get("/:userId", async (req, res) => {
   const orders = await Order.find({ userId: req.params.userId })
     .populate("items.productId");

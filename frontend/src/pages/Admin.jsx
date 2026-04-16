@@ -27,7 +27,7 @@ function Admin() {
       <div className="admin-login-right">
         <div className="admin-login-content">
           <img
-            src="https://upload.wikimedia.org/wikipedia/commons/0/00/Nykaa_New_Logo.svg"
+            /*src="https://upload.wikimedia.org/wikipedia/commons/0/00/Nykaa_New_Logo.svg"*/
             alt="Nykaa"
             className="nykaa-logo"
           />
