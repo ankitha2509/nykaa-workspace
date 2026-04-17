@@ -17,8 +17,10 @@ const app = express();
 app.use(cors({
   origin: [
     "http://localhost:5173",
-    "https://nykaa-workspace.vercel.app"
+    "https://nykaa-workspace.vercel.app",
+    "https://nykaa-workspace-ar3dah8fp-ankitha2509s-projects.vercel.app"
   ],
+  methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true
 }));
 
