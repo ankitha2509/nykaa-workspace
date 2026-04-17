@@ -183,43 +183,59 @@ function Header() {
             <div className="login-box">
 
               <button
-                className="close-btn"
-                onClick={() => setShowLogin(false)}
-              >
-                ×
-              </button>
+  className="close-btn"
+  onClick={() => setShowLogin(false)}
+>
+  ×
+</button>
 
-              <h2>Login or Signup</h2>
+<h2>Login or Signup</h2>
 
-              <p className="reward-text">
-                Register now and get <b>2000 Nykaa reward points</b> instantly!
-              </p>
+<p className="reward-text">
+  Register now and get
+  <b> 2000 Nykaa reward points </b>
+  instantly!
+</p>
 
-          
-              <button
-                className="login-btn"
-                onClick={() => {
-                  setShowLogin(false);
-                  navigate("/login");
-                }}
-              >
-                Login
-              </button>
+<button
+  className="login-btn"
+  onClick={() => {
+    setShowLogin(false);
+    navigate("/login");
+  }}
+>
+  Login
+</button>
 
-              <div className="divider">
-                Or sign in using
-              </div>
+<div className="divider">
+  Or sign in using
+</div>
 
-             
-              <button
-                className="login-btn"
-                onClick={() => {
-                  setShowLogin(false);
-                  navigate("/signup");
-                }}
-              >
-                Sign in with Mobile / Email
-              </button>
+<button
+  className="login-btn"
+  onClick={() => {
+    setShowLogin(false);
+    navigate("/signup");
+  }}
+>
+  Sign in with Mobile / Email
+</button>
+
+<div className="divider">
+  Admin Access
+</div>
+
+<button
+  className="admin-btn"
+  onClick={() => {
+    setShowLogin(false);
+    navigate("/admin");
+  }}
+>
+  Login as Admin
+</button>
+               
+
 
             </div>
           </div>

@@ -232,6 +232,21 @@
 .signin-btn:hover {
   background: #e91e63;
 }
+.admin-btn {
+  width: 100%;
+  padding: 12px;
+  margin-top: 10px;
+  border: none;
+  border-radius: 6px;
+  background-color: bisque;
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.admin-btn:hover {
+  opacity: 0.9;
+}
 
 .cart-icon {
   cursor: pointer;

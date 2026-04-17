@@ -1,3 +1,4 @@
+// src/pages/Signup.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -9,14 +10,21 @@ function Signup() {
   const [mode, setMode] = useState("mobile");
   const [mobile, setMobile] = useState("");
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
+
+  const API = import.meta.env.VITE_API_URL;
 
   const handleSignup = async () => {
     try {
+      setLoading(true);
+
       const payload =
-        mode === "mobile" ? { mobile } : { email };
+        mode === "mobile"
+          ? { mobile }
+          : { email };
 
       const response = await axios.post(
-        "https://backend-1bfu.onrender.com/api/auth/signup/send-otp",
+        `${API}/api/auth/signup/send-otp`,
         payload
       );
 
@@ -24,12 +32,18 @@ function Signup() {
         state: {
           value: mode === "mobile" ? mobile : email,
           type: mode,
-          purpose: "signup"
+          purpose: "signup",
+          otp: response.data.otp
         }
       });
 
     } catch (error) {
-      alert(error.response?.data?.message || "Something went wrong");
+      alert(
+        error.response?.data?.message ||
+        "Something went wrong"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -41,12 +55,14 @@ function Signup() {
   return (
     <div className="signup-wrapper">
 
-      <div className="signup-left">
-       
-      </div>
+      <div className="signup-left"></div>
+
       <div className="signup-right">
 
-        <div className="skip" onClick={() => navigate("/home")}>
+        <div
+          className="skip"
+          onClick={() => navigate("/home")}
+        >
           Skip
         </div>
 
@@ -70,7 +86,9 @@ function Signup() {
                 type="text"
                 placeholder="Enter Mobile Number"
                 value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
+                onChange={(e) =>
+                  setMobile(e.target.value)
+                }
               />
             </div>
           )}
@@ -81,23 +99,35 @@ function Signup() {
                 type="email"
                 placeholder="Enter Email Address"
                 value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                onChange={(e) =>
+                  setEmail(e.target.value)
+                }
               />
             </div>
           )}
 
           <button
-            className={isValid ? "active-btn" : "disabled-btn"}
+            className={
+              isValid
+                ? "active-btn"
+                : "disabled-btn"
+            }
             onClick={handleSignup}
-            disabled={!isValid}
+            disabled={!isValid || loading}
           >
-            Continue
+            {loading
+              ? "Please wait..."
+              : "Continue"}
           </button>
 
           <div
             className="toggle-link"
             onClick={() =>
-              setMode(mode === "mobile" ? "email" : "mobile")
+              setMode(
+                mode === "mobile"
+                  ? "email"
+                  : "mobile"
+              )
             }
           >
             {mode === "mobile"
@@ -107,10 +137,11 @@ function Signup() {
 
           <div
             className="login-link"
-            onClick={() => navigate("/login")}
+            onClick={() =>
+              navigate("/login")
+            }
           >
             Already have an account? Login
-            
           </div>
 
         </div>
