@@ -1,57 +1,126 @@
 const express = require("express");
 const router = express.Router();
+
 const Cart = require("../models/Cart");
 
+/* ===============================
+   ADD TO CART
+================================= */
 router.post("/add", async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
 
-    const existing = await Cart.findOne({ userId, productId });
+    if (!userId || !productId) {
+      return res.status(400).json({
+        message: "Missing data"
+      });
+    }
+
+    const existing = await Cart.findOne({
+      userId,
+      productId
+    });
 
     if (existing) {
-      existing.quantity += quantity;
+      existing.quantity += quantity || 1;
       await existing.save();
-      return res.json({ message: "Quantity updated" });
+
+      return res.json({
+        success: true,
+        message: "Quantity updated"
+      });
     }
 
     const newItem = new Cart({
       userId,
       productId,
-      quantity,
+      quantity: quantity || 1
     });
 
     await newItem.save();
 
-    res.json({ message: "Added to cart" });
+    res.json({
+      success: true,
+      message: "Added to cart"
+    });
 
-  } catch (err) {
-    res.status(500).json({ message: "Error adding to cart" });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Error adding to cart"
+    });
   }
 });
 
 
+/* ===============================
+   GET USER CART
+================================= */
 router.get("/:userId", async (req, res) => {
   try {
-    const cart = await Cart.find({ userId: req.params.userId })
-      .populate("productId"); 
+    const cart = await Cart.find({
+      userId: req.params.userId
+    }).populate("productId");
 
     res.json(cart);
 
-  } catch (err) {
-    res.status(500).json({ message: "Error fetching cart" });
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      message: "Error fetching cart"
+    });
   }
 });
 
+
+/* ===============================
+   DELETE ITEM
+================================= */
 router.delete("/delete/:id", async (req, res) => {
-  await Cart.findByIdAndDelete(req.params.id);
-  res.json({ message: "Deleted" });
+  try {
+    await Cart.findByIdAndDelete(req.params.id);
+
+    res.json({
+      success: true,
+      message: "Deleted"
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Delete failed"
+    });
+  }
 });
 
+
+/* ===============================
+   UPDATE QUANTITY
+================================= */
 router.put("/update/:id", async (req, res) => {
-  await Cart.findByIdAndUpdate(req.params.id, {
-    quantity: req.body.quantity,
-  });
-  res.json({ message: "Updated" });
+  try {
+    await Cart.findByIdAndUpdate(req.params.id, {
+      quantity: req.body.quantity
+    });
+
+    res.json({
+      success: true,
+      message: "Updated"
+    });
+
+  } catch (error) {
+    console.log(error);
+
+    res.status(500).json({
+      success: false,
+      message: "Update failed"
+    });
+  }
 });
 
 module.exports = router;
