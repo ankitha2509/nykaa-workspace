@@ -413,8 +413,8 @@ body {
 }
 
 .admin-product-card img {
-  width: 20%;
-  height: 100px;
+  width: 60%;
+  height: 250px;
   object-fit: cover;
   border-radius: 10px;
 }
