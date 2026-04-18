@@ -18,6 +18,8 @@ import Address from "./pages/Address";
 import Payment from "./pages/Payment";
 import Profile from "./pages/Profile";
 import Orders from "./pages/Orders";
+import ManageOrders from "./pages/admin/ManageOrders";
+import ManageUsers from "./pages/admin/ManageUsers";
 
 
 const stripePromise = loadStripe("pk_test_51TJfOQRlygTIqOImwHGH2rja3XMueVUmVrLZbu0TdyZKQS241szMjEyoeHiro8qCVlkW5ekcGyo24K34cKFsDnVP00zhAzQaAf");
