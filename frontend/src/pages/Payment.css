@@ -1,146 +1,192 @@
-
 .payment-page {
-  display: flex;
-  gap: 30px;
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: 28px;
   padding: 40px;
-  background: #f7f7f7;
+  background: #f8f8fb;
   min-height: 100vh;
   font-family: "Segoe UI", sans-serif;
 }
 
+/* LEFT SIDE */
 .payment-left {
-  flex: 2;
-  background: white;
-  padding: 25px;
-  border-radius: 16px;
+  background: #ffffff;
+  border-radius: 22px;
+  padding: 32px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
 }
 
 .payment-left h2 {
-  margin-bottom: 5px;
+  font-size: 30px;
+  margin-bottom: 8px;
+  color: #111;
 }
 
 .subtitle {
   color: #777;
-  margin-bottom: 20px;
   font-size: 14px;
+  margin-bottom: 24px;
 }
 
+/* PAYMENT OPTIONS */
 .payment-options {
-  margin-bottom: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
 }
 
 .option {
-  border: 1px solid #ddd;
-  padding: 14px;
-  border-radius: 12px;
-  margin-bottom: 10px;
+  padding: 18px;
+  border: 1px solid #e8e8e8;
+  border-radius: 16px;
+  background: #fff;
   cursor: pointer;
+  font-size: 16px;
+  font-weight: 600;
   transition: 0.3s ease;
-  font-weight: 500;
 }
 
 .option span {
   display: block;
-  font-size: 12px;
-  color: #888;
-  margin-top: 3px;
+  margin-top: 6px;
+  font-size: 13px;
+  color: #777;
+  font-weight: 400;
 }
 
 .option:hover {
+  transform: translateY(-2px);
   border-color: #fc2779;
 }
 
 .option.active {
   border-color: #fc2779;
-  background: #fff0f6;
+  background: #fff1f7;
+  box-shadow: 0 8px 20px rgba(252, 39, 121, 0.12);
 }
 
-
+/* UPI BOX */
 .upi-box {
-  margin-top: 20px;
+  margin-top: 24px;
   text-align: center;
-  padding: 15px;
-  border: 1px dashed #ddd;
-  border-radius: 12px;
+  padding: 24px;
+  border-radius: 18px;
+  background: #fafafa;
+  border: 1px dashed #d8d8d8;
 }
 
 .upi-box img {
-  margin: 10px 0;
-}
-
-
-.card-box {
-  margin-top: 20px;
-  padding: 15px;
-  border: 1px solid #ddd;
+  width: 180px;
+  height: 180px;
+  margin: 14px 0;
   border-radius: 12px;
 }
 
+/* CARD BOX */
+.card-box {
+  margin-top: 24px;
+  padding: 20px;
+  border-radius: 18px;
+  border: 1px solid #e4e4e4;
+  background: #fafafa;
+}
 
 .StripeElement {
-  padding: 12px;
+  padding: 14px;
+  background: white;
+  border-radius: 10px;
   border: 1px solid #ddd;
-  border-radius: 8px;
 }
 
-
+/* BUTTON */
 .place-btn {
   width: 100%;
-  padding: 15px;
-  margin-top: 25px;
-  background: linear-gradient(90deg, #fc2779, #ff5c8d);
-  color: white;
+  margin-top: 28px;
+  padding: 16px;
   border: none;
-  border-radius: 12px;
-  font-size: 16px;
-  font-weight: bold;
+  border-radius: 14px;
+  background: linear-gradient(90deg, #fc2779, #ff5b8d);
+  color: white;
+  font-size: 17px;
+  font-weight: 700;
   cursor: pointer;
   transition: 0.3s ease;
 }
 
 .place-btn:hover {
-  transform: scale(1.02);
-  box-shadow: 0 6px 20px rgba(252, 39, 121, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 10px 25px rgba(252, 39, 121, 0.35);
 }
 
+/* RIGHT SIDE */
 .payment-right {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
 }
 
 .card {
   background: white;
-  padding: 15px;
-  border-radius: 12px;
-  margin-bottom: 15px;
-  box-shadow: 0 6px 15px rgba(0,0,0,0.05);
+  border-radius: 20px;
+  padding: 22px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.05);
 }
 
 .card h4 {
-  margin-bottom: 10px;
-}
-
-
-.bag-item {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  margin-bottom: 8px;
-}
-
-.bag-item img {
-  width: 45px;
-  height: 45px;
-  border-radius: 8px;
-  object-fit: cover;
+  font-size: 18px;
+  margin-bottom: 14px;
+  color: #111;
 }
 
 .card p {
   font-size: 14px;
-  margin: 3px 0;
+  color: #555;
+  margin: 6px 0;
 }
 
-@media (max-width: 768px) {
+/* BAG ITEMS */
+.bag-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f1f1f1;
+}
+
+.bag-item:last-child {
+  border-bottom: none;
+}
+
+.bag-item img {
+  width: 58px;
+  height: 58px;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+.bag-item span {
+  font-size: 14px;
+  color: #222;
+  font-weight: 500;
+}
+
+/* MOBILE */
+@media (max-width: 900px) {
   .payment-page {
-    flex-direction: column;
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .payment-left,
+  .card {
+    padding: 20px;
+  }
+
+  .payment-left h2 {
+    font-size: 24px;
+  }
+
+  .place-btn {
+    font-size: 16px;
   }
 }
