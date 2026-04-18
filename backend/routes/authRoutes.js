@@ -1,3 +1,11 @@
+const express = require("express");
+const router = express.Router();
+const jwt = require("jsonwebtoken");
+const User = require("../models/User");
+
+const generateOTP = () =>
+  Math.floor(100000 + Math.random() * 900000).toString();
+
 router.post("/signup/send-otp", async (req, res) => {
   try {
     const { name, mobile, email } = req.body;
@@ -74,3 +82,5 @@ router.post("/login/send-otp", async (req, res) => {
     });
   }
 });
+
+const router = express.Router();
