@@ -1,109 +1,88 @@
-.signup-wrapper {
-  display: flex;
-  height: 100vh;
-  font-family: Arial, sans-serif;
+.signup-wrapper{
+display:flex;
+height:100vh;
+font-family:Arial;
 }
 
-.signup-left {
-  flex: 1;
-  background-color:#972c55; 
-  color: white;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.signup-left{
+flex:1;
+background:linear-gradient(135deg,#fc2779,#8e44ad);
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+font-size:34px;
+font-weight:bold;
 }
 
-.signup-left h1 {
-  font-size: 32px;
-  font-weight: 600;
+.signup-right{
+flex:1;
+display:flex;
+justify-content:center;
+align-items:center;
+position:relative;
 }
 
-.signup-right {
-  flex: 1;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.skip{
+position:absolute;
+top:20px;
+right:30px;
+color:#fc2779;
+cursor:pointer;
+font-weight:bold;
 }
 
-.skip {
-  position: absolute;
-  top: 25px;
-  right: 40px;
-  color: #fc2779;
-  font-weight: 600;
-  cursor: pointer;
+.signup-content{
+width:380px;
+display:flex;
+flex-direction:column;
+gap:14px;
 }
 
-.signup-content {
-  width: 380px;
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;  
+.nykaa-logo{
+width:90px;
+margin:auto;
 }
 
-.signup-content h2 {
-  margin-top: 10px;
-  margin-bottom: 4px;
- 
-}
-.nykaa-logo {
-  width: 80px;
-  margin-bottom: 15px;
+.signup-content h2{
+text-align:center;
 }
 
-h2 {
-  margin-bottom: 6px;
-}
-.subtitle {
-  font-size: 14px;
-  color: gray;
-  margin-bottom: 20px;
+.subtitle{
+text-align:center;
+color:gray;
+margin-bottom:10px;
 }
 
-.input-row input {
-  width: 150%;
-  padding: 12px;
-  border: 1px solid #ccc;
-  border-radius: 6px;
-  margin-bottom: 15px;
-  font-size: 14px;
+.signup-content input{
+padding:14px;
+border:1px solid #ddd;
+border-radius:8px;
+font-size:15px;
 }
 
-.active-btn {
-  width: 50%;
-  padding: 12px;
-  background-color: #fc2779;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  font-weight: 600;
- 
+.active-btn{
+padding:14px;
+background:#fc2779;
+color:white;
+border:none;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
 }
 
-.disabled-btn {
-  width: 50%;
-  padding: 12px;
-  background-color: grey;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: not-allowed;
+.disabled-btn{
+padding:14px;
+background:gray;
+color:white;
+border:none;
+border-radius:8px;
 }
 
-.toggle-link {
-  margin-top: 15px;
-  color: #fc2779;
-  cursor: pointer;
-  font-size: 14px;
-  text-align: center;
-}
-
-.login-link {
-  margin-top: 20px;
-  font-size: 14px;
-  cursor: pointer;
-  color: black;
-  text-align: center;
+.login-link{
+text-align:center;
+margin-top:10px;
+cursor:pointer;
+color:#fc2779;
+font-weight:600;
 }

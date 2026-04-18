@@ -1,4 +1,3 @@
-// src/pages/Signup.jsx
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
@@ -7,62 +6,59 @@ import "./Signup.css";
 function Signup() {
   const navigate = useNavigate();
 
-  const [mode, setMode] = useState("mobile");
-  const [mobile, setMobile] = useState("");
-  const [email, setEmail] = useState("");
+  const API = import.meta.env.VITE_API_URL;
+
+  const [form, setForm] = useState({
+    name: "",
+    mobile: "",
+    email: "",
+  });
+
   const [loading, setLoading] = useState(false);
 
-  const API = import.meta.env.VITE_API_URL;
+  const handleChange = (e) => {
+    setForm({
+      ...form,
+      [e.target.name]: e.target.value,
+    });
+  };
 
   const handleSignup = async () => {
     try {
       setLoading(true);
 
-      const payload =
-        mode === "mobile"
-          ? { mobile }
-          : { email };
-
-      const response = await axios.post(
-        `${API}/api/auth/signup/send-otp`,
-        payload
-      );
+      await axios.post(`${API}/api/auth/signup/send-otp`, form);
 
       navigate("/otp", {
         state: {
-          value: mode === "mobile" ? mobile : email,
-          type: mode,
+          value: form.email,
+          type: "email",
           purpose: "signup",
-          otp: response.data.otp
-        }
+        },
       });
 
     } catch (error) {
-      alert(
-        error.response?.data?.message ||
-        "Something went wrong"
-      );
+      alert(error.response?.data?.message || "Error");
     } finally {
       setLoading(false);
     }
   };
 
   const isValid =
-    mode === "mobile"
-      ? mobile.length === 10
-      : email.includes("@");
+    form.name &&
+    form.mobile.length === 10 &&
+    form.email.includes("@");
 
   return (
     <div className="signup-wrapper">
 
-      <div className="signup-left"></div>
+      <div className="signup-left">
+        <h1>Join Nykaa Beauty</h1>
+      </div>
 
       <div className="signup-right">
 
-        <div
-          className="skip"
-          onClick={() => navigate("/home")}
-        >
+        <div className="skip" onClick={() => navigate("/home")}>
           Skip
         </div>
 
@@ -74,74 +70,48 @@ function Signup() {
             className="nykaa-logo"
           />
 
-          <h2>Sign Up</h2>
-
+          <h2>Create Account</h2>
           <p className="subtitle">
-            Create your account to explore beauty products!
+            Sign up with email & get OTP in inbox
           </p>
 
-          {mode === "mobile" && (
-            <div className="input-row">
-              <input
-                type="text"
-                placeholder="Enter Mobile Number"
-                value={mobile}
-                onChange={(e) =>
-                  setMobile(e.target.value)
-                }
-              />
-            </div>
-          )}
+          <input
+            type="text"
+            name="name"
+            placeholder="Full Name"
+            value={form.name}
+            onChange={handleChange}
+          />
 
-          {mode === "email" && (
-            <div className="input-row">
-              <input
-                type="email"
-                placeholder="Enter Email Address"
-                value={email}
-                onChange={(e) =>
-                  setEmail(e.target.value)
-                }
-              />
-            </div>
-          )}
+          <input
+            type="text"
+            name="mobile"
+            placeholder="Mobile Number"
+            value={form.mobile}
+            onChange={handleChange}
+          />
+
+          <input
+            type="email"
+            name="email"
+            placeholder="Email Address"
+            value={form.email}
+            onChange={handleChange}
+          />
 
           <button
-            className={
-              isValid
-                ? "active-btn"
-                : "disabled-btn"
-            }
-            onClick={handleSignup}
+            className={isValid ? "active-btn" : "disabled-btn"}
             disabled={!isValid || loading}
+            onClick={handleSignup}
           >
-            {loading
-              ? "Please wait..."
-              : "Continue"}
+            {loading ? "Sending OTP..." : "Continue"}
           </button>
 
           <div
-            className="toggle-link"
-            onClick={() =>
-              setMode(
-                mode === "mobile"
-                  ? "email"
-                  : "mobile"
-              )
-            }
-          >
-            {mode === "mobile"
-              ? "Use Email Instead"
-              : "Use Mobile Instead"}
-          </div>
-
-          <div
             className="login-link"
-            onClick={() =>
-              navigate("/login")
-            }
+            onClick={() => navigate("/login")}
           >
-            Already have an account? Login
+            Already have account? Login
           </div>
 
         </div>

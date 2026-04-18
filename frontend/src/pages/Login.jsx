@@ -1,99 +1,97 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import axios from "axios"; 
+import axios from "axios";
 import "./Login.css";
 
 function Login() {
   const navigate = useNavigate();
 
-  const [mode, setMode] = useState("mobile");
-  const [mobile, setMobile] = useState("");
+  const API = import.meta.env.VITE_API_URL;
+
   const [email, setEmail] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const handleProceed = async () => {
     try {
-      const payload = mode === "mobile" ? { mobile } : { email };
+      setLoading(true);
 
-      const response = await axios.post(
-        "https://backend-1bfu.onrender.com/api/auth/login/send-otp",
-        payload
+      await axios.post(
+        `${API}/api/auth/login/send-otp`,
+        { email }
       );
 
       navigate("/otp", {
         state: {
-          value: mode === "mobile" ? mobile : email,
-          type: mode
+          value: email,
+          type: "email",
+          purpose: "login"
         }
       });
 
     } catch (error) {
-      console.log(error.response?.data);
-      alert(error.response?.data?.message || "Something went wrong");
+      alert(
+        error.response?.data?.message ||
+        "Something went wrong"
+      );
+    } finally {
+      setLoading(false);
     }
   };
 
+  const valid = email.includes("@");
+
   return (
     <div className="login-wrapper">
-      <div className="login-left"></div>
+
+      <div className="login-left">
+        <h1>Welcome Back</h1>
+      </div>
 
       <div className="login-right">
-        
-        <div className="skip" onClick={() => navigate("/home")}>
+
+        <div
+          className="skip"
+          onClick={() => navigate("/home")}
+        >
           Skip
         </div>
 
         <div className="login-content">
+
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/0/00/Nykaa_New_Logo.svg"
             alt="Nykaa"
             className="nykaa-logo"
           />
 
-          <h2>Login or Signup</h2>
+          <h2>Login</h2>
 
           <p className="subtitle">
-            Get started & grab best offers on top brands!
+            Enter your email & receive OTP
           </p>
 
-          {mode === "mobile" && (
-            <div className="otp-row">
-              <input
-                type="text"
-                placeholder="Mobile Number"
-                value={mobile}
-                onChange={(e) => setMobile(e.target.value)}
-              />
-              <button onClick={handleProceed}>
-                Get OTP
-              </button>
-            </div>
-          )}
+          <input
+            type="email"
+            placeholder="Enter Email Address"
+            value={email}
+            onChange={(e) =>
+              setEmail(e.target.value)
+            }
+          />
 
-          {mode === "email" && (
-            <div className="otp-row">
-              <input
-                type="email"
-                placeholder="Email ID"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-              />
-              <button onClick={handleProceed}>
-                Proceed
-              </button>
-            </div>
-          )}
-
-          <div className="signup-btn" onClick={() => navigate("/signup")}>
-            Sign up 
-          </div>
+          <button
+            className={valid ? "active-btn" : "disabled-btn"}
+            disabled={!valid || loading}
+            onClick={handleProceed}
+          >
+            {loading ? "Sending OTP..." : "Continue"}
+          </button>
 
           <div
-            className="email-link"
-            onClick={() => setMode(mode === "mobile" ? "email" : "mobile")}
+            className="signup-link"
+            onClick={() => navigate("/signup")}
           >
-            {mode === "mobile"
-              ? "Use Email ID"
-              : "Use Mobile Number"}
+            New user? Sign Up
           </div>
 
         </div>
