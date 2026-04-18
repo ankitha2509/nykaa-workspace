@@ -18,7 +18,6 @@ import Address from "./pages/Address";
 import Payment from "./pages/Payment";
 import Profile from "./pages/Profile";
 import Orders from "./pages/Orders";
-import AdminOrders from "./pages/AdminOrders";
 
 
 const stripePromise = loadStripe("pk_test_51TJfOQRlygTIqOImwHGH2rja3XMueVUmVrLZbu0TdyZKQS241szMjEyoeHiro8qCVlkW5ekcGyo24K34cKFsDnVP00zhAzQaAf");
@@ -43,7 +42,8 @@ function App() {
         <Route path="/cart" element={<Cart />} />
         <Route path="/address" element={<Address />} />
         <Route path="/orders" element={<Orders />} />
-        <Route path="/adminOrders" element={<AdminOrders/>} />
+        <Route path="/admin/manage-orders" element={<ManageOrders />} />
+        <Route path="/admin/manage-users" element={<ManageUsers />} /> 
         
         <Route
           path="/payment"
