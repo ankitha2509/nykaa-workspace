@@ -5,60 +5,90 @@ import "./ProductDetails.css";
 function ProductDetails() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  const user = JSON.parse(localStorage.getItem("user") || "{}");
+  const userId = user?._id;
+
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
     const fetchProduct = async () => {
-      try {
-        const res = await fetch(
-          `https://backend-1bfu.onrender.com/api/product/${id}`
-        );
-        const data = await res.json();
-        setProduct(data);
-      } catch (err) {
-        console.log(err);
-      }
+      const res = await fetch(
+        `https://backend-1bfu.onrender.com/api/product/${id}`
+      );
+
+      const data = await res.json();
+      setProduct(data);
     };
 
     fetchProduct();
   }, [id]);
 
-  if (!product) return <h2 className="loading">Loading...</h2>;
+  const handleAddToCart = async () => {
+    try {
+      if (!userId) {
+        alert("Please login first");
+        navigate("/login");
+        return;
+      }
+
+      const res = await fetch(
+        "https://backend-1bfu.onrender.com/api/cart/add",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            userId: userId,
+            productId: product._id,
+            quantity: 1
+          })
+        }
+      );
+
+      const data = await res.json();
+
+      alert(data.message);
+
+      navigate("/cart");
+
+    } catch (error) {
+      console.log(error);
+      alert("Error adding to cart");
+    }
+  };
+
+  if (!product) return <h2>Loading...</h2>;
 
   return (
     <div className="product-page">
 
-      <div className="product-card">
+      <div className="product-left">
+        <img src={product.image} alt={product.name} />
+      </div>
 
-        {/* LEFT SIDE IMAGE */}
-        <div className="product-image-section">
-          <img src={product.image} alt={product.name} />
-        </div>
+      <div className="product-right">
 
-        {/* RIGHT SIDE INFO */}
-        <div className="product-info">
+        <h1>{product.name}</h1>
+        <p className="brand">{product.brand}</p>
 
-          <h1 className="title">{product.name}</h1>
-          <p className="brand">{product.brand}</p>
+        <h2 className="price">₹{product.price}</h2>
 
-          <h2 className="price">₹{product.price}</h2>
+        <p className="desc">{product.description}</p>
 
-          <p className="desc">{product.description}</p>
+        <div className="btn-group">
 
-          <div className="btn-group">
+          <button
+            className="cart-btn"
+            onClick={handleAddToCart}
+          >
+            Add To Cart
+          </button>
 
-            <button
-              className="cart-btn"
-              onClick={() => alert("Cart next step ")}
-            >
-              Add to Cart
-            </button>
-
-            <button className="wishlist-btn">
-              Wishlist 
-            </button>
-
-          </div>
+          <button className="wishlist-btn">
+            Wishlist
+          </button>
 
         </div>
 
