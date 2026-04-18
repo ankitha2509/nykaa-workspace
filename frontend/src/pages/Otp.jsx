@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import axios from "axios";
 import "./Otp.css";
@@ -12,83 +12,93 @@ function OTPPage() {
 
   const [otp, setOtp] = useState(["", "", "", "", "", ""]);
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const inputRefs = useRef([]);
 
-  if (!value || !type) {
-    navigate("/");
-  }
+  useEffect(() => {
+    if (!value || !type) {
+      navigate("/login");
+    }
+  }, []);
 
   const handleChange = (e, index) => {
-    if (isNaN(e.target.value)) return;
+    const val = e.target.value;
+
+    if (isNaN(val)) return;
 
     const newOtp = [...otp];
-    newOtp[index] = e.target.value;
+    newOtp[index] = val;
     setOtp(newOtp);
 
-    if (e.target.value && index < 5) {
+    if (val && index < 5) {
       inputRefs.current[index + 1].focus();
     }
   };
 
-   const handleVerify = async () => {
-   const finalOtp = otp.join("");
+  const handleVerify = async () => {
+    try {
+      setLoading(true);
+      setError("");
 
-  try {
-    const payload =
-      type === "mobile"
-        ? { mobile: value, otp: finalOtp }
-        : { email: value, otp: finalOtp };
+      const finalOtp = otp.join("");
 
-    const response = await axios.post(
-      "https://backend-1bfu.onrender.com/api/auth/verify-otp",
-      payload
-    );
+      const payload =
+        type === "email"
+          ? { email: value, otp: finalOtp }
+          : { mobile: value, otp: finalOtp };
 
-    localStorage.setItem("isLoggedIn", "true");
-    localStorage.setItem("user", JSON.stringify(response.data.user));
-    localStorage.setItem("token", response.data.token);
+      const res = await axios.post(
+        "https://backend-1bfu.onrender.com/api/auth/verify-otp",
+        payload
+      );
 
-    alert(response.data.message);
+      localStorage.setItem("token", res.data.token);
+      localStorage.setItem("user", JSON.stringify(res.data.user));
+      localStorage.setItem("isLoggedIn", "true");
 
-    navigate("/home");
-  } catch (err) {
-    setError("OTP is incorrect or expired. Please try again.");
-  }
-};
+      alert("Login Successful");
+      navigate("/home");
+
+    } catch (err) {
+      setError("Invalid or expired OTP");
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <div className="otp-wrapper">
+
       <div className="otp-left"></div>
 
       <div className="otp-right">
+
         <div className="skip" onClick={() => navigate("/home")}>
           Skip
         </div>
 
         <div className="otp-card">
+
           <img
             src="https://upload.wikimedia.org/wikipedia/commons/0/00/Nykaa_New_Logo.svg"
-            alt="Nykaa"
             className="nykaa-logo"
           />
 
           <h2>OTP Verification</h2>
 
-          <p>
-            Enter OTP received on <strong>{value}</strong>
-          </p>
+          <p>Enter OTP sent to</p>
+          <strong>{value}</strong>
 
           <div className="otp-box-container">
-            {otp.map((data, index) => (
+            {otp.map((digit, index) => (
               <input
                 key={index}
-                type="text"
                 maxLength="1"
-                value={data}
+                value={digit}
+                className="otp-box"
                 onChange={(e) => handleChange(e, index)}
                 ref={(el) => (inputRefs.current[index] = el)}
-                className="otp-box"
               />
             ))}
           </div>
@@ -96,15 +106,13 @@ function OTPPage() {
           {error && <p className="error-text">{error}</p>}
 
           <button className="verify-btn" onClick={handleVerify}>
-            Verify
+            {loading ? "Verifying..." : "Verify OTP"}
           </button>
 
           <p className="resend">Resend OTP</p>
 
-          <p className="terms">
-            By continuing, I agree to Nykaa's T&Cs
-          </p>
         </div>
+
       </div>
     </div>
   );

@@ -1,78 +1,82 @@
-.otp-wrapper {
-  display: flex;
-  height: 100vh;
+.otp-wrapper{
+display:flex;
+height:100vh;
+font-family:Arial;
 }
 
-.otp-left {
-  flex: 1;
-  background-color: #972c55;
+.otp-left{
+flex:1;
+background:#972c55;
 }
 
-.otp-right {
-  flex: 1;
-  position: relative;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.otp-right{
+flex:1;
+display:flex;
+justify-content:center;
+align-items:center;
+position:relative;
 }
 
-.skip {
-  position: absolute;
-  top: 25px;
-  right: 40px;
-  color: #fc2779;
-  font-weight: 600;
-  cursor: pointer;
+.skip{
+position:absolute;
+top:25px;
+right:40px;
+color:#fc2779;
+cursor:pointer;
+font-weight:600;
 }
 
-.nykaa-logo {
-  width: 90px;
-  margin-bottom: 20px;
+.otp-card{
+width:350px;
+text-align:center;
+padding:30px;
 }
 
-.otp-card {
-  width: 300px;
-  text-align: center;
+.nykaa-logo{
+width:90px;
+margin-bottom:20px;
 }
 
-.otp-box-container {
-  display: flex;
-  justify-content: space-between;
-  margin: 20px 0;
+.otp-box-container{
+display:flex;
+justify-content:space-between;
+margin:25px 0;
 }
 
-.otp-box {
-  width: 40px;
-  height: 45px;
-  font-size: 18px;
-  text-align: center;
-  border: 1px solid #ccc;
-  border-radius: 6px;
+.otp-box{
+width:45px;
+height:50px;
+font-size:20px;
+text-align:center;
+border:1px solid #ccc;
+border-radius:8px;
 }
 
-.verify-btn {
-  width: 100%;
-  padding: 10px;
-  background: #fc2779;
-  color: white;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
+.otp-box:focus{
+border-color:#fc2779;
+outline:none;
 }
 
-.error-text {
-  color: red;
-  font-size: 14px;
+.verify-btn{
+width:100%;
+padding:12px;
+background:#fc2779;
+color:white;
+border:none;
+border-radius:8px;
+font-weight:bold;
+cursor:pointer;
 }
 
-.resend {
-  margin-top: 10px;
-  color: #fc2779;
-  cursor: pointer;
+.error-text{
+color:red;
+font-size:14px;
+margin-bottom:10px;
 }
 
-.terms {
-  font-size: 12px;
-  margin-top: 15px;
-  color: gray;
+.resend{
+margin-top:15px;
+color:#fc2779;
+cursor:pointer;
+font-size:14px;
 }
