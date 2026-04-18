@@ -394,7 +394,7 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
   gap: 25px;
-  max-width: 1200px;
+  max-width: 800px;
   margin: auto;
 }
 
@@ -413,7 +413,7 @@ body {
 }
 
 .admin-product-card img {
-  width: 60%;
+  width: 35%;
   height: 250px;
   object-fit: cover;
   border-radius: 10px;
