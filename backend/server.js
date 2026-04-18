@@ -15,13 +15,22 @@ const app = express();
 
 // ✅ MIDDLEWARE
 app.use(cors({
-  origin: [
-    "http://localhost:5173",
-    "https://nykaa-workspace.vercel.app",
-    "https://nykaa-workspace-ar3dah8fp-ankitha2509s-projects.vercel.app"
-  ],
-  methods: ["GET", "POST", "PUT", "DELETE"],
-  credentials: true
+  origin: function (origin, callback) {
+
+    if (!origin) return callback(null, true);
+
+    if (
+      origin === "http://localhost:5173" ||
+      origin === "https://nykaa-workspace.vercel.app" ||
+      origin.endsWith(".vercel.app")
+    ) {
+      return callback(null, true);
+    }
+
+    return callback(new Error("CORS blocked"));
+  },
+  credentials: true,
+  methods: ["GET", "POST", "PUT", "DELETE"]
 }));
 
 app.use(express.json());
