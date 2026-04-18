@@ -9,22 +9,38 @@ const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // ================================
-// ADD PRODUCT
+// ADD PRODUCT (FIXED)
 // ================================
 
 router.post("/add", upload.single("image"), async (req, res) => {
   try {
+
     console.log("ADD PRODUCT HIT");
 
     let imageUrl = "";
 
+    // upload image to cloudinary
     if (req.file) {
-      const result = await cloudinary.uploader.upload_stream(
-        { folder: "nykaa-products" },
-        async (error, result) => {
-          if (error) throw error;
-        }
-      );
+
+      const streamUpload = (buffer) => {
+        return new Promise((resolve, reject) => {
+
+          const stream = cloudinary.uploader.upload_stream(
+            {
+              folder: "nykaa-products"
+            },
+            (error, result) => {
+              if (result) resolve(result);
+              else reject(error);
+            }
+          );
+
+          stream.end(buffer);
+        });
+      };
+
+      const result = await streamUpload(req.file.buffer);
+      imageUrl = result.secure_url;
     }
 
     const product = new Product({
@@ -52,3 +68,5 @@ router.post("/add", upload.single("image"), async (req, res) => {
     });
   }
 });
+
+module.exports = router;
