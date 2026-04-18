@@ -10,6 +10,7 @@ const cartRoutes = require("./routes/cart");
 const addressRoutes = require("./routes/address");
 const paymentRoutes = require("./routes/payment");
 const orderRoutes = require("./routes/order");
+const adminRoutes = require("./routes/admin");
 
 const app = express();
 
@@ -45,6 +46,8 @@ app.use("/api/cart", cartRoutes);
 app.use("/api/address", addressRoutes);
 app.use("/api/payment", paymentRoutes);
 app.use("/api/order", orderRoutes);
+app.use("/api/admin", adminRoutes);
+
 
 // test route
 app.post("/api/test", (req, res) => {
