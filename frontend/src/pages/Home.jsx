@@ -454,27 +454,35 @@ const brandImages = [
 </div>
 
       <div className="admin-products">
-        <h2 className="admin-title">OUR PRODUCTS</h2>
+  <h2 className="admin-title">OUR PRODUCTS</h2>
 
-        <div className="admin-product-grid">
-          {products.map((item) => (
-            <div
-              className="admin-product-card"
-              key={item._id}
-              onClick={() => navigate(`/product/${item._id}`)}
-            >
-              <img
-                src={`https://backend-1bfu.onrender.com/${item.image}`}
-                alt={item.name}
-              />
+  <div className="admin-product-grid">
 
-              <h4>{item.name}</h4>
-              <p className="brand">{item.brand}</p>
-              <p className="price">₹{item.price}</p>
-            </div>
-          ))}
-        </div>
+    {products.map((item) => (
+      <div
+        className="admin-product-card"
+        key={item._id}
+        onClick={() => navigate(`/product/${item._id}`)}
+      >
+
+        {/* ✅ FIXED IMAGE (CLOUDINARY SAFE) */}
+        <img
+          src={item.image}
+          alt={item.name}
+          onError={(e) => {
+            e.target.src = "https://via.placeholder.com/150";
+          }}
+        />
+
+        <h4>{item.name}</h4>
+        <p className="brand">{item.brand}</p>
+        <p className="price">₹{item.price}</p>
+
       </div>
+    ))}
+
+  </div>
+</div>
 
       <Footer />
     </div>
