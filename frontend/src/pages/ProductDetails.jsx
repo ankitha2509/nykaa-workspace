@@ -1,89 +1,47 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import "./ProductDetails.css";
 
-function ProductDetails() {
 
+function ProductDetails() {
+  const { id } = useParams();
   const navigate = useNavigate();
 
-  const user = JSON.parse(localStorage.getItem("user"));
-  const userId = user?._id;
-
-  const { id } = useParams();
   const [product, setProduct] = useState(null);
 
   useEffect(() => {
-    fetch(`https://backend-1bfu.onrender.com/api/product/${id}`)
-      .then(res => res.json())
-      .then(data => setProduct(data))
-      .catch(err => console.log(err));
+    const fetchProduct = async () => {
+      try {
+        const res = await fetch(
+          `https://backend-1bfu.onrender.com/api/product/${id}`
+        );
+
+        const data = await res.json();
+        setProduct(data);
+      } catch (err) {
+        console.log(err);
+      }
+    };
+
+    fetchProduct();
   }, [id]);
 
-  const handleAddToCart = async () => {
-
-  
-    if (!userId) {
-      alert("Please login first");
-      navigate("/login");
-      return;
-    }
-
-    try {
-      const res = await fetch("https://backend-1bfu.onrender.com/api/cart/add", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          userId: userId,          
-          productId: product._id,  
-          quantity: 1,
-        }),
-      });
-
-      const data = await res.json();
-      alert(data.message);
-
-      navigate("/cart");
-
-    } catch (err) {
-      console.log(err);
-      alert("Error adding to cart");
-    }
-  };
-
-  if (!product) {
-    return <h2>Loading...</h2>;
-  }
+  if (!product) return <h2>Loading...</h2>;
 
   return (
     <div className="product-details">
 
-      <div className="details-container">
+      <img src={product.image} alt={product.name} />
 
-        <img
-          src={`https://backend-1bfu.onrender.com/${product.image}`}
-          alt={product.name}
-        />
+      <h2>{product.name}</h2>
+      <h4>{product.brand}</h4>
 
-        <div className="details-info">
+      <p>₹{product.price}</p>
+      <p>{product.description}</p>
 
-          <h2>{product.name}</h2>
-          <h4>{product.brand}</h4>
-
-          <p className="price">₹{product.price}</p>
-          <p className="desc">{product.description}</p>
-
-          <button className="cart-btn" onClick={handleAddToCart}>
-            Add To Cart
-          </button>
-
-          <button className="wishlist-btn">Wishlist</button>
-
-        </div>
-
-      </div>
+      <button onClick={() => alert("Cart next step 👍")}>
+        Add To Cart
+      </button>
 
     </div>
   );
