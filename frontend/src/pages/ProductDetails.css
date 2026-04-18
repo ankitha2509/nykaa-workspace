@@ -1,57 +1,115 @@
-.product-details{
-padding:60px;
+.product-page {
+  padding: 40px;
+  background: #f8f8f8;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.details-container{
-display:flex;
-gap:60px;
-max-width:1000px;
-margin:auto;
+/* MAIN CARD */
+.product-card {
+  display: flex;
+  gap: 50px;
+  background: white;
+  padding: 40px;
+  border-radius: 20px;
+  max-width: 1000px;
+  width: 100%;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.1);
 }
 
-.details-container img{
-width:300px;
-border-radius:30px;
+/* LEFT IMAGE */
+.product-image-section {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
-.details-info{
-flex:1;
+.product-image-section img {
+  width: 350px;
+  height: 420px;
+  object-fit: cover;
+  border-radius: 20px;
+  box-shadow: 0 8px 20px rgba(0,0,0,0.15);
 }
 
-.price{
-font-size:22px;
-color:#fc2779;
-font-weight:bold;
-margin:10px 0;
+/* RIGHT INFO */
+.product-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
 }
 
-.desc{
-margin:20px 0;
-color:#555;
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  margin-bottom: 10px;
 }
 
-.cart-btn{
-width:65%;
-background: slateblue;
-color:white;
-border:none;
-padding:10px 20px;
-border-radius:6px;
-cursor:pointer;
-margin: 12px;
+.brand {
+  color: gray;
+  font-size: 16px;
+  margin-bottom: 15px;
+}
+
+.price {
+  font-size: 26px;
+  color: #fc2779;
+  font-weight: bold;
+  margin-bottom: 20px;
+}
+
+.desc {
+  font-size: 15px;
+  color: #555;
+  line-height: 1.5;
+  margin-bottom: 30px;
+}
+
+/* BUTTONS */
+.btn-group {
+  display: flex;
+  gap: 15px;
 }
 
 .cart-btn {
+  flex: 1;
+  background: #ff3f6c;
+  color: white;
+  border: none;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
   cursor: pointer;
+  transition: 0.3s;
 }
 
-.wishlist-btn{
-width:30%;
-background:palevioletred;
-color:white;
-border:none;
-padding:10px 20px;
-border-radius:6px;
-cursor:pointer;
-margin:12px;
+.cart-btn:hover {
+  background: #e91e63;
+}
+
+.wishlist-btn {
+  flex: 1;
+  background: white;
+  border: 2px solid #ff3f6c;
+  color: #ff3f6c;
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+.wishlist-btn:hover {
+  background: #ff3f6c;
+  color: white;
+}
+
+/* LOADING */
+.loading {
+  text-align: center;
+  margin-top: 100px;
 }
