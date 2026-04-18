@@ -13,17 +13,25 @@ function ProductDetails() {
 
   useEffect(() => {
     const fetchProduct = async () => {
-      const res = await fetch(
-        `https://backend-1bfu.onrender.com/api/product/${id}`
-      );
+      try {
+        const res = await fetch(
+          `https://backend-1bfu.onrender.com/api/product/${id}`
+        );
 
-      const data = await res.json();
-      setProduct(data);
+        const data = await res.json();
+        setProduct(data);
+
+      } catch (err) {
+        console.log(err);
+      }
     };
 
     fetchProduct();
   }, [id]);
 
+  // ===============================
+  // ADD TO CART
+  // ===============================
   const handleAddToCart = async () => {
     try {
       if (!userId) {
@@ -59,15 +67,17 @@ function ProductDetails() {
     }
   };
 
-  if (!product) return <h2>Loading...</h2>;
+  if (!product) return <h2 className="loading">Loading...</h2>;
 
   return (
     <div className="product-page">
 
+      {/* LEFT IMAGE */}
       <div className="product-left">
         <img src={product.image} alt={product.name} />
       </div>
 
+      {/* RIGHT INFO */}
       <div className="product-right">
 
         <h1>{product.name}</h1>
@@ -91,6 +101,13 @@ function ProductDetails() {
           </button>
 
         </div>
+
+        <button
+          className="back-btn"
+          onClick={() => navigate(-1)}
+        >
+          ← Go Back
+        </button>
 
       </div>
 
