@@ -7,7 +7,6 @@ function ViewProducts() {
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
-
   const API = import.meta.env.VITE_API_URL;
 
   // ==============================
@@ -19,7 +18,6 @@ function ViewProducts() {
 
       const res = await fetch(`${API}/api/product/all`);
 
-      // safety check (IMPORTANT)
       if (!res.ok) {
         throw new Error("Failed to fetch products");
       }
@@ -53,7 +51,7 @@ function ViewProducts() {
 
       const data = await res.json();
 
-      alert(data.message || "Deleted");
+      alert(data.message || "Deleted successfully");
 
       fetchProducts();
 
@@ -101,6 +99,7 @@ function ViewProducts() {
             {products.map((product) => (
               <tr key={product._id}>
 
+                {/* IMAGE */}
                 <td>
                   <img
                     src={product.image}
@@ -121,17 +120,22 @@ function ViewProducts() {
 
                 <td>
 
+                  {/* EDIT BUTTON */}
                   <button
                     className="edit-btn"
                     onClick={() =>
                       navigate("/admin/add-product", {
-                        state: product,
+                        state: {
+                          ...product,
+                          category: product.category?.trim()
+                        }
                       })
                     }
                   >
                     Edit
                   </button>
 
+                  {/* DELETE BUTTON */}
                   <button
                     className="delete-btn"
                     onClick={() => handleDelete(product._id)}

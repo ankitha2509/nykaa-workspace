@@ -9,30 +9,29 @@ function AddProduct() {
   const API = import.meta.env.VITE_API_URL;
 
   const [product, setProduct] = useState(
-    editProduct || {
-      name: "",
-      brand: "",
-      category: "",
-      price: "",
-      stock: "",
-      description: "",
-      image: null
-    }
+    editProduct
+      ? {
+          ...editProduct,
+          category: editProduct.category?.trim() || ""
+        }
+      : {
+          name: "",
+          brand: "",
+          category: "",
+          price: "",
+          stock: "",
+          description: "",
+          image: null
+        }
   );
 
   const [loading, setLoading] = useState(false);
 
   const handleChange = (e) => {
     if (e.target.name === "image") {
-      setProduct({
-        ...product,
-        image: e.target.files[0]
-      });
+      setProduct({ ...product, image: e.target.files[0] });
     } else {
-      setProduct({
-        ...product,
-        [e.target.name]: e.target.value
-      });
+      setProduct({ ...product, [e.target.name]: e.target.value });
     }
   };
 
@@ -63,11 +62,11 @@ function AddProduct() {
 
       const data = await res.json();
 
-      alert(data.message);
+      alert(data.message || "Success");
 
     } catch (error) {
-      alert("Product upload failed");
       console.log(error);
+      alert("Product upload failed");
     } finally {
       setLoading(false);
     }
@@ -75,59 +74,74 @@ function AddProduct() {
 
   return (
     <div className="add-product-container">
-      <h2>
-        {editProduct ? "Update Product" : "Add Product"}
-      </h2>
+      <h2>{editProduct ? "Update Product" : "Add Product"}</h2>
 
       <form onSubmit={handleSubmit} className="product-form">
 
-        <input name="name" placeholder="Name"
+        <input
+          name="name"
+          placeholder="Name"
           value={product.name}
-          onChange={handleChange} required />
+          onChange={handleChange}
+          required
+        />
 
-        <input name="brand" placeholder="Brand"
+        <input
+          name="brand"
+          placeholder="Brand"
           value={product.brand}
-          onChange={handleChange} required />
+          onChange={handleChange}
+          required
+        />
 
+        {/* ✅ CATEGORY FIXED */}
         <select
-  name="category"
-  value={product.category}
-  onChange={handleChange}
-  required
->
-  <option value="">Select Category</option>
+          name="category"
+          value={product.category || ""}
+          onChange={handleChange}
+          required
+        >
+          <option value="">Select Category</option>
+          <option value="Makeup">Makeup</option>
+          <option value="Skin">Skin</option>
+          <option value="Hair">Hair</option>
+          <option value="Appliances">Appliances</option>
+          <option value="Bath & Body">Bath & Body</option>
+          <option value="Natural">Natural</option>
+          <option value="Mom & Baby">Mom & Baby</option>
+          <option value="Health & Wellness">Health & Wellness</option>
+          <option value="Men">Men</option>
+          <option value="Fragrance">Fragrance</option>
+          <option value="Lingerie & Accessories">Lingerie & Accessories</option>
+        </select>
 
-  <option value="Makeup">Makeup</option>
-  <option value="Skin">Skin</option>
-  <option value="Hair">Hair</option>
-  <option value="Appliances">Appliances</option>
-  <option value="Bath & Body">Bath & Body</option>
-  <option value="Natural">Natural</option>
-  <option value="Mom & Baby">Mom & Baby</option>
-  <option value="Health & Wellness">Health & Wellness</option>
-  <option value="Men">Men</option>
-  <option value="Fragrance">Fragrance</option>
-  <option value="Lingerie & Accessories">Lingerie & Accessories</option>
-</select>
-
-        <input name="price" type="number"
+        <input
+          name="price"
+          type="number"
           placeholder="Price"
           value={product.price}
-          onChange={handleChange} required />
+          onChange={handleChange}
+          required
+        />
 
-        <input name="stock" type="number"
+        <input
+          name="stock"
+          type="number"
           placeholder="Stock"
           value={product.stock}
-          onChange={handleChange} required />
+          onChange={handleChange}
+          required
+        />
 
-        <textarea name="description"
+        <textarea
+          name="description"
           placeholder="Description"
           value={product.description}
-          onChange={handleChange} required />
+          onChange={handleChange}
+          required
+        />
 
-        <input type="file"
-          name="image"
-          onChange={handleChange} />
+        <input type="file" name="image" onChange={handleChange} />
 
         <button type="submit">
           {loading ? "Please wait..." : "Save Product"}
