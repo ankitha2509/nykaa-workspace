@@ -1,3 +1,5 @@
+// src/pages/ViewProducts.jsx
+
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import "./ViewProducts.css";
@@ -5,98 +7,228 @@ import "./ViewProducts.css";
 function ViewProducts() {
 
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+
   const navigate = useNavigate();
 
+  const API =
+    import.meta.env.VITE_API_URL;
+
+
+
+  // ==================================
+  // FETCH PRODUCTS
+  // ==================================
+
   const fetchProducts = async () => {
-    const res = await fetch("https://backend-1bfu.onrender.com/api/product/all");
-    const data = await res.json();
-    setProducts(data);
+
+    try {
+
+      setLoading(true);
+
+      const res = await fetch(
+        `${API}/api/product/all`
+      );
+
+      const data =
+        await res.json();
+
+      setProducts(data);
+
+    } catch (error) {
+
+      console.log(error);
+      alert(
+        "Failed to load products"
+      );
+
+    } finally {
+
+      setLoading(false);
+
+    }
+
   };
+
+
 
   useEffect(() => {
     fetchProducts();
   }, []);
 
+
+
+
+  // ==================================
+  // DELETE PRODUCT
+  // ==================================
+
   const handleDelete = async (id) => {
 
-    const confirmDelete = window.confirm("Delete this product?");
+    const confirmDelete =
+      window.confirm(
+        "Delete this product?"
+      );
+
     if (!confirmDelete) return;
 
-    await fetch(`https://backend-1bfu.onrender.com/api/product/delete/${id}`, {
-      method: "DELETE"
-    });
+    try {
 
-    fetchProducts();
+      const res = await fetch(
+        `${API}/api/product/delete/${id}`,
+        {
+          method: "DELETE"
+        }
+      );
+
+      const data =
+        await res.json();
+
+      alert(data.message);
+
+      fetchProducts();
+
+    } catch (error) {
+
+      console.log(error);
+
+      alert(
+        "Delete failed"
+      );
+
+    }
+
   };
 
+
+
+  // ==================================
+  // UI
+  // ==================================
+
   return (
+
     <div className="view-products-container">
 
       <h2>All Products</h2>
 
-      <table className="product-table">
 
-        <thead>
-          <tr>
-            <th>Image</th>
-            <th>Name</th>
-            <th>Brand</th>
-            <th>Category</th>
-            <th>Price</th>
-            <th>Stock</th>
-            <th>Actions</th>
-          </tr>
-        </thead>
 
-        <tbody>
+      {loading ? (
 
-          {products.map((product) => (
+        <h3>Loading...</h3>
 
-            <tr key={product._id}>
+      ) : products.length === 0 ? (
 
-              <td>
-                <img
-                  src={`https://backend-1bfu.onrender.com/${product.image}`}
-                  alt="product"
-                  className="product-img"
-                />
-              </td>
+        <h3>No Products Found</h3>
 
-              <td>{product.name}</td>
-              <td>{product.brand}</td>
-              <td>{product.category}</td>
-              <td>₹ {product.price}</td>
-              <td>{product.stock}</td>
+      ) : (
 
-              <td>
+        <table className="product-table">
 
-                <button
-                  className="edit-btn"
-                  onClick={() =>
-                    navigate("/admin/add-product", { state: product })
-                  }
-                >
-                  Edit
-                </button>
+          <thead>
 
-                <button
-                  className="delete-btn"
-                  onClick={() => handleDelete(product._id)}
-                >
-                  Delete
-                </button>
-
-              </td>
-
+            <tr>
+              <th>Image</th>
+              <th>Name</th>
+              <th>Brand</th>
+              <th>Category</th>
+              <th>Price</th>
+              <th>Stock</th>
+              <th>Actions</th>
             </tr>
-          ))}
 
-        </tbody>
+          </thead>
 
-      </table>
+
+
+          <tbody>
+
+            {products.map(
+              (product) => (
+
+              <tr
+                key={product._id}
+              >
+
+                <td>
+
+                  <img
+                  src={product.image}
+                  alt={product.name}
+                  className="product-img"
+                  />
+
+                </td>
+
+                <td>
+                  {product.name}
+                </td>
+
+                <td>
+                  {product.brand}
+                </td>
+
+                <td>
+                  {product.category}
+                </td>
+
+                <td>
+                  ₹ {product.price}
+                </td>
+
+                <td>
+                  {product.stock}
+                </td>
+
+
+
+                <td>
+
+                  <button
+                    className="edit-btn"
+                    onClick={() =>
+                      navigate(
+                        "/admin/add-product",
+                        {
+                          state:
+                            product
+                        }
+                      )
+                    }
+                  >
+                    Edit
+                  </button>
+
+
+
+                  <button
+                    className="delete-btn"
+                    onClick={() =>
+                      handleDelete(
+                        product._id
+                      )
+                    }
+                  >
+                    Delete
+                  </button>
+
+                </td>
+
+              </tr>
+
+            ))}
+
+          </tbody>
+
+        </table>
+
+      )}
 
     </div>
+
   );
+
 }
 
 export default ViewProducts;
