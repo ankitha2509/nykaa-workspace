@@ -89,6 +89,27 @@ function AddProduct() {
           value={product.brand}
           onChange={handleChange} required />
 
+        <select
+  name="category"
+  value={product.category}
+  onChange={handleChange}
+  required
+>
+  <option value="">Select Category</option>
+
+  <option value="Makeup">Makeup</option>
+  <option value="Skin">Skin</option>
+  <option value="Hair">Hair</option>
+  <option value="Appliances">Appliances</option>
+  <option value="Bath & Body">Bath & Body</option>
+  <option value="Natural">Natural</option>
+  <option value="Mom & Baby">Mom & Baby</option>
+  <option value="Health & Wellness">Health & Wellness</option>
+  <option value="Men">Men</option>
+  <option value="Fragrance">Fragrance</option>
+  <option value="Lingerie & Accessories">Lingerie & Accessories</option>
+</select>
+
         <input name="price" type="number"
           placeholder="Price"
           value={product.price}
