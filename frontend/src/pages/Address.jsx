@@ -22,9 +22,9 @@ function Address() {
     setAddresses(data);
   };
 
-  useEffect(() => {
-    if (userId) fetchAddresses();
-  }, []);
+   useEffect(() => {
+  if (userId) fetchAddresses();
+}, [userId]);
 
   const handleChange = (e) => {
     setForm({ ...form, [e.target.name]: e.target.value });
