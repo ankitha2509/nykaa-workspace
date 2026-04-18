@@ -8,27 +8,22 @@ const Product = require("../models/Product");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-// ================================
-// ADD PRODUCT (FIXED)
-// ================================
 
+// ================================
+// ADD PRODUCT
+// ================================
 router.post("/add", upload.single("image"), async (req, res) => {
   try {
 
-    console.log("ADD PRODUCT HIT");
-
     let imageUrl = "";
 
-    // upload image to cloudinary
     if (req.file) {
 
       const streamUpload = (buffer) => {
         return new Promise((resolve, reject) => {
 
           const stream = cloudinary.uploader.upload_stream(
-            {
-              folder: "nykaa-products"
-            },
+            { folder: "nykaa-products" },
             (error, result) => {
               if (result) resolve(result);
               else reject(error);
@@ -55,17 +50,37 @@ router.post("/add", upload.single("image"), async (req, res) => {
 
     await product.save();
 
-    res.json({
-      success: true,
-      message: "Product added successfully"
-    });
+    res.json({ success: true, message: "Product added successfully" });
 
   } catch (error) {
-    console.log("ADD ERROR:", error);
-    res.status(500).json({
-      success: false,
-      message: error.message
-    });
+    console.log(error);
+    res.status(500).json({ success: false, message: error.message });
+  }
+});
+
+
+// ================================
+// GET ALL PRODUCTS
+// ================================
+router.get("/all", async (req, res) => {
+  try {
+    const products = await Product.find().sort({ createdAt: -1 });
+    res.json(products);
+  } catch (err) {
+    res.status(500).json({ message: "Error fetching products" });
+  }
+});
+
+
+// ================================
+// DELETE PRODUCT
+// ================================
+router.delete("/delete/:id", async (req, res) => {
+  try {
+    await Product.findByIdAndDelete(req.params.id);
+    res.json({ message: "Deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Delete error" });
   }
 });
 
