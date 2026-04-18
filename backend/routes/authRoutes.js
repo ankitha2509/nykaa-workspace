@@ -3,8 +3,11 @@ const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 
-const generateOTP = () =>
-  Math.floor(100000 + Math.random() * 900000).toString();
+const generateOTP = () => {
+  return Math.floor(100000 + Math.random() * 900000).toString();
+};
+
+
 
 router.post("/signup/send-otp", async (req, res) => {
   try {
@@ -12,7 +15,7 @@ router.post("/signup/send-otp", async (req, res) => {
 
     if (!name || !mobile || !email) {
       return res.status(400).json({
-        message: "Fill all fields"
+        message: "Please fill all fields"
       });
     }
 
@@ -37,7 +40,7 @@ router.post("/signup/send-otp", async (req, res) => {
     await newUser.save();
 
     res.json({
-      message: "OTP sent to email"
+      message: "OTP sent successfully"
     });
 
   } catch (error) {
@@ -47,13 +50,15 @@ router.post("/signup/send-otp", async (req, res) => {
   }
 });
 
+
+
 router.post("/login/send-otp", async (req, res) => {
   try {
     const { email } = req.body;
 
     if (!email) {
       return res.status(400).json({
-        message: "Email required"
+        message: "Email is required"
       });
     }
 
@@ -73,7 +78,7 @@ router.post("/login/send-otp", async (req, res) => {
     await user.save();
 
     res.json({
-      message: "OTP sent to email"
+      message: "OTP sent successfully"
     });
 
   } catch (error) {
@@ -83,4 +88,97 @@ router.post("/login/send-otp", async (req, res) => {
   }
 });
 
-const router = express.Router();
+
+
+router.post("/verify-otp", async (req, res) => {
+  try {
+    const { email, otp } = req.body;
+
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(400).json({
+        message: "User not found"
+      });
+    }
+
+    if (
+      user.otp !== otp ||
+      !user.otpExpires ||
+      user.otpExpires < Date.now()
+    ) {
+      return res.status(400).json({
+        message: "OTP is invalid or expired"
+      });
+    }
+
+    user.otp = null;
+    user.otpExpires = null;
+
+    await user.save();
+
+    const token = jwt.sign(
+      { id: user._id },
+      "secretkey",
+      { expiresIn: "1d" }
+    );
+
+    res.json({
+      message: "Login successful",
+      token,
+      user: {
+        _id: user._id,
+        name: user.name,
+        mobile: user.mobile,
+        email: user.email
+      }
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: error.message
+    });
+  }
+});
+
+
+
+router.get("/user/:id", async (req, res) => {
+  try {
+    const user = await User.findById(req.params.id);
+
+    res.json(user);
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching user"
+    });
+  }
+});
+
+
+
+router.put("/update/:id", async (req, res) => {
+  try {
+    const { name, gender, mobile } = req.body;
+
+    await User.findByIdAndUpdate(req.params.id, {
+      name,
+      gender,
+      mobile
+    });
+
+    res.json({
+      message: "Profile updated successfully"
+    });
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Error updating profile"
+    });
+  }
+});
+
+
+
+module.exports = router;
