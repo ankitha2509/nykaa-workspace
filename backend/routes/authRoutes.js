@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
-const sendEmail = require("../utils/sendEmail");
+const sendEmail = require("../config/sendEmail");
 
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
