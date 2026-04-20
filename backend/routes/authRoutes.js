@@ -2,6 +2,7 @@ const express = require("express");
 const router = express.Router();
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const sendEmail = require("../utils/sendEmail");
 
 const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
@@ -38,9 +39,10 @@ router.post("/signup/send-otp", async (req, res) => {
     });
 
     await newUser.save();
+    await sendEmail(email, otp);
 
     res.json({
-      message: "OTP sent successfully"
+      message: "OTP sent successfully to email"
     });
 
   } catch (error) {
@@ -76,9 +78,10 @@ router.post("/login/send-otp", async (req, res) => {
     user.otpExpires = Date.now() + 5 * 60 * 1000;
 
     await user.save();
+    await sendEmail(email, otp);
 
     res.json({
-      message: "OTP sent successfully"
+      message: "OTP sent successfully to email"
     });
 
   } catch (error) {
@@ -119,7 +122,7 @@ router.post("/verify-otp", async (req, res) => {
 
     const token = jwt.sign(
       { id: user._id },
-      "secretkey",
+      process.env.JWT_SECRET || "secretkey",
       { expiresIn: "1d" }
     );
 
