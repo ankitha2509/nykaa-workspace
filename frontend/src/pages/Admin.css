@@ -11,7 +11,8 @@
 
 .admin-login-left {
   width: 50%;
-  background-color: #972c55; 
+  background:linear-gradient(135deg,#fc2779,#8e44ad);
+
 }
 
 .admin-login-right {
