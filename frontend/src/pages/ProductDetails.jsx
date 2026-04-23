@@ -29,9 +29,7 @@ function ProductDetails() {
     fetchProduct();
   }, [id]);
 
-  // ===============================
-  // ADD TO CART
-  // ===============================
+
   const handleAddToCart = async () => {
     try {
       if (!userId) {
@@ -72,12 +70,12 @@ function ProductDetails() {
   return (
     <div className="product-page">
 
-      {/* LEFT IMAGE */}
+     
       <div className="product-left">
         <img src={product.image} alt={product.name} />
       </div>
 
-      {/* RIGHT INFO */}
+     
       <div className="product-right">
 
         <h1>{product.name}</h1>

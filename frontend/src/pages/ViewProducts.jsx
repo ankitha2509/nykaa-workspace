@@ -9,9 +9,7 @@ function ViewProducts() {
   const navigate = useNavigate();
   const API = import.meta.env.VITE_API_URL;
 
-  // ==============================
-  // FETCH PRODUCTS
-  // ==============================
+  
   const fetchProducts = async () => {
     try {
       setLoading(true);
@@ -37,9 +35,7 @@ function ViewProducts() {
     fetchProducts();
   }, []);
 
-  // ==============================
-  // DELETE PRODUCT
-  // ==============================
+  
   const handleDelete = async (id) => {
     const confirmDelete = window.confirm("Delete this product?");
     if (!confirmDelete) return;
@@ -61,9 +57,7 @@ function ViewProducts() {
     }
   };
 
-  // ==============================
-  // LOADING UI
-  // ==============================
+  
   if (loading) {
     return (
       <div className="view-products-container">
@@ -99,7 +93,7 @@ function ViewProducts() {
             {products.map((product) => (
               <tr key={product._id}>
 
-                {/* IMAGE */}
+                
                 <td>
                   <img
                     src={product.image}
@@ -120,7 +114,6 @@ function ViewProducts() {
 
                 <td>
 
-                  {/* EDIT BUTTON */}
                   <button
                     className="edit-btn"
                     onClick={() =>
@@ -135,7 +128,6 @@ function ViewProducts() {
                     Edit
                   </button>
 
-                  {/* DELETE BUTTON */}
                   <button
                     className="delete-btn"
                     onClick={() => handleDelete(product._id)}
