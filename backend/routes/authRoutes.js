@@ -36,8 +36,10 @@ router.post("/signup/send-otp", async (req, res) => {
       otpExpires: Date.now() + 5 * 60 * 1000
     });
 
-    await newUser.save();
     await sendEmail(email, otp);
+    await newUser.save();
+
+   
 
     res.json({
       message: "OTP sent successfully to email"
