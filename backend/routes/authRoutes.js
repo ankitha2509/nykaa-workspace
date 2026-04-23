@@ -8,8 +8,6 @@ const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
-
-
 router.post("/signup/send-otp", async (req, res) => {
   try {
     const { name, mobile, email } = req.body;
@@ -52,8 +50,6 @@ router.post("/signup/send-otp", async (req, res) => {
   }
 });
 
-
-
 router.post("/login/send-otp", async (req, res) => {
   try {
     const { email } = req.body;
@@ -90,8 +86,6 @@ router.post("/login/send-otp", async (req, res) => {
     });
   }
 });
-
-
 
 router.post("/verify-otp", async (req, res) => {
   try {
@@ -144,8 +138,6 @@ router.post("/verify-otp", async (req, res) => {
   }
 });
 
-
-
 router.get("/user/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -158,7 +150,6 @@ router.get("/user/:id", async (req, res) => {
     });
   }
 });
-
 
 
 router.put("/update/:id", async (req, res) => {
@@ -181,7 +172,5 @@ router.put("/update/:id", async (req, res) => {
     });
   }
 });
-
-
 
 module.exports = router;

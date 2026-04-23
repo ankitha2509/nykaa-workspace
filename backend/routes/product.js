@@ -8,14 +8,10 @@ const Product = require("../models/Product");
 const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
-/* =================================
-   ADD PRODUCT
-================================= */
 router.post("/add", upload.single("image"), async (req, res) => {
   try {
     let imageUrl = "";
 
-    // upload image to cloudinary
     if (req.file) {
       const streamUpload = (buffer) => {
         return new Promise((resolve, reject) => {
@@ -38,7 +34,7 @@ router.post("/add", upload.single("image"), async (req, res) => {
     const product = new Product({
       name: req.body.name,
       brand: req.body.brand,
-      category: req.body.category?.trim(), // ✅ FIXED
+      category: req.body.category?.trim(), 
       price: req.body.price,
       stock: req.body.stock,
       description: req.body.description,
@@ -62,9 +58,6 @@ router.post("/add", upload.single("image"), async (req, res) => {
 });
 
 
-/* =================================
-   GET ALL PRODUCTS
-================================= */
 router.get("/all", async (req, res) => {
   try {
     const products = await Product.find().sort({ createdAt: -1 });
@@ -78,9 +71,6 @@ router.get("/all", async (req, res) => {
 });
 
 
-/* =================================
-   DELETE PRODUCT
-================================= */
 router.delete("/delete/:id", async (req, res) => {
   try {
     const product = await Product.findById(req.params.id);
@@ -107,10 +97,6 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
-
-/* =================================
-   UPDATE PRODUCT
-================================= */
 router.put("/update/:id", upload.single("image"), async (req, res) => {
   try {
     const oldProduct = await Product.findById(req.params.id);
@@ -123,7 +109,7 @@ router.put("/update/:id", upload.single("image"), async (req, res) => {
 
     let imageUrl = oldProduct.image;
 
-    // if new image uploaded
+    
     if (req.file) {
       const streamUpload = (buffer) => {
         return new Promise((resolve, reject) => {
@@ -146,7 +132,7 @@ router.put("/update/:id", upload.single("image"), async (req, res) => {
     await Product.findByIdAndUpdate(req.params.id, {
       name: req.body.name,
       brand: req.body.brand,
-      category: req.body.category?.trim(), // ✅ FIXED
+      category: req.body.category?.trim(), 
       price: req.body.price,
       stock: req.body.stock,
       description: req.body.description,

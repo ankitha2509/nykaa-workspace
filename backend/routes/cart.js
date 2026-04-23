@@ -3,9 +3,6 @@ const router = express.Router();
 
 const Cart = require("../models/Cart");
 
-/* ===============================
-   ADD TO CART
-================================= */
 router.post("/add", async (req, res) => {
   try {
     const { userId, productId, quantity } = req.body;
@@ -55,9 +52,6 @@ router.post("/add", async (req, res) => {
 });
 
 
-/* ===============================
-   GET USER CART
-================================= */
 router.get("/:userId", async (req, res) => {
   try {
     const cart = await Cart.find({
@@ -75,10 +69,6 @@ router.get("/:userId", async (req, res) => {
   }
 });
 
-
-/* ===============================
-   DELETE ITEM
-================================= */
 router.delete("/delete/:id", async (req, res) => {
   try {
     await Cart.findByIdAndDelete(req.params.id);
@@ -98,10 +88,6 @@ router.delete("/delete/:id", async (req, res) => {
   }
 });
 
-
-/* ===============================
-   UPDATE QUANTITY
-================================= */
 router.put("/update/:id", async (req, res) => {
   try {
     await Cart.findByIdAndUpdate(req.params.id, {

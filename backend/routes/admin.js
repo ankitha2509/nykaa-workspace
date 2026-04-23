@@ -5,9 +5,6 @@ const User = require("../models/User");
 const Order = require("../models/Order");
 
 
-// ==============================
-// GET ALL USERS
-// ==============================
 router.get("/users", async (req, res) => {
   try {
     const users = await User.find().sort({ createdAt: -1 });
@@ -19,9 +16,6 @@ router.get("/users", async (req, res) => {
 });
 
 
-// ==============================
-// GET ALL ORDERS
-// ==============================
 router.get("/orders", async (req, res) => {
   try {
     const orders = await Order.find()
@@ -35,9 +29,6 @@ router.get("/orders", async (req, res) => {
 });
 
 
-// ==============================
-// UPDATE ORDER STATUS
-// ==============================
 router.put("/orders/:id", async (req, res) => {
   try {
     await Order.findByIdAndUpdate(req.params.id, {
