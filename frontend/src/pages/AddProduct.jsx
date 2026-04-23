@@ -94,7 +94,6 @@ function AddProduct() {
           required
         />
 
-        {/* ✅ CATEGORY FIXED */}
         <select
           name="category"
           value={product.category || ""}

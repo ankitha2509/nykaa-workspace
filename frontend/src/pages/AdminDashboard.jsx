@@ -12,17 +12,14 @@ function AdminDashboard() {
   return (
     <div className="admin-wrapper">
 
-      {/* HEADER */}
       <header className="admin-header">
         <div className="logo">NYKAA ADMIN</div>
       </header>
 
       <div className="admin-body">
 
-        {/* SIDEBAR */}
         <div className="sidebar">
 
-          {/* GENERAL */}
           <div className="menu-section">
             <p className="menu-title">GENERAL</p>
 
@@ -45,7 +42,7 @@ function AdminDashboard() {
             </ul>
           </div>
 
-          {/* ACCOUNT */}
+        
           <div className="menu-section">
             <p className="menu-title">ACCOUNT</p>
 
@@ -64,7 +61,6 @@ function AdminDashboard() {
             </ul>
           </div>
 
-          {/* SUPPORT */}
           <div className="menu-section">
             <p className="menu-title">SUPPORT</p>
 
@@ -75,7 +71,6 @@ function AdminDashboard() {
             </ul>
           </div>
 
-          {/* LOGOUT */}
           <div className="logout-section">
             <button onClick={logoutAdmin}>
               Logout
@@ -84,10 +79,10 @@ function AdminDashboard() {
 
         </div>
 
-        {/* MAIN CONTENT */}
+     
         <div className="main-content">
 
-          <h1>Welcome to Dashboard 👋</h1>
+          <h1>Welcome to Dashboard </h1>
 
           <p>
             Manage Products, Orders, Users and Settings

@@ -464,8 +464,6 @@ const brandImages = [
         key={item._id}
         onClick={() => navigate(`/product/${item._id}`)}
       >
-
-        {/* ✅ FIXED IMAGE (CLOUDINARY SAFE) */}
         <img
           src={item.image}
           alt={item.name}

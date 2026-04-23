@@ -91,7 +91,6 @@ function Cart() {
           {cartItems.map((item) => (
             <div className="cart-item" key={item._id}>
 
-              {/* LEFT */}
               <div className="cart-left">
 
                 <img
@@ -109,7 +108,6 @@ function Cart() {
 
               </div>
 
-              {/* RIGHT */}
               <div className="cart-right">
 
                 <div className="qty-box">
