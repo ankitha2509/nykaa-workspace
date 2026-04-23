@@ -2,13 +2,12 @@ import { useEffect, useState } from "react";
 import "./ManageOrders.css";
 
 function ManageOrders() {
-
   const [orders, setOrders] = useState([]);
 
   const fetchOrders = () => {
     fetch("https://backend-1bfu.onrender.com/api/admin/orders")
-      .then(res => res.json())
-      .then(data => setOrders(data));
+      .then((res) => res.json())
+      .then((data) => setOrders(data));
   };
 
   useEffect(() => {
@@ -31,28 +30,60 @@ function ManageOrders() {
   };
 
   return (
-    <div className="manage-page">
+    <div className="manage-orders-page">
 
-      <h2>All Orders ({orders.length})</h2>
+      <div className="top-bar">
+        <h2>Manage Orders</h2>
+        <span>{orders.length} Orders</span>
+      </div>
 
-      {orders.map(order => (
+      {orders.map((order) => (
         <div className="order-card" key={order._id}>
 
-          <h3>{order.name}</h3>
-          <p>{order.address}</p>
-          <p>₹{order.totalAmount}</p>
-          <p>{order.paymentMethod}</p>
+          <div className="order-header">
+            <div>
+              <h3>{order.name}</h3>
+              <p>{order.address}</p>
+            </div>
 
-          <select
-            value={order.status || "Pending"}
-            onChange={(e) =>
-              updateStatus(order._id, e.target.value)
-            }
-          >
-            <option>Pending</option>
-            <option>Shipped</option>
-            <option>Delivered</option>
-          </select>
+            <div className={`status-badge ${order.status?.toLowerCase()}`}>
+              {order.status || "Pending"}
+            </div>
+          </div>
+
+          <div className="order-details">
+            <p><strong>Total:</strong> ₹{order.totalAmount}</p>
+            <p><strong>Payment:</strong> {order.paymentMethod}</p>
+          </div>
+
+          <div className="product-section">
+            <h4>Products</h4>
+
+            {order.items?.map((item, index) => (
+              <div className="product-row" key={index}>
+                <img src={item.image} alt="" />
+                <div>
+                  <p>{item.name}</p>
+                  <span>Qty: {item.quantity}</span>
+                </div>
+                <b>₹{item.price}</b>
+              </div>
+            ))}
+          </div>
+
+          <div className="status-section">
+            <select
+              value={order.status || "Pending"}
+              onChange={(e) =>
+                updateStatus(order._id, e.target.value)
+              }
+            >
+              <option>Pending</option>
+              <option>Placed</option>
+              <option>Shipped</option>
+              <option>Delivered</option>
+            </select>
+          </div>
 
         </div>
       ))}
