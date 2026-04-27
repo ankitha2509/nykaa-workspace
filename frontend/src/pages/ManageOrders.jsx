@@ -56,20 +56,27 @@ function ManageOrders() {
             <p><strong>Payment:</strong> {order.paymentMethod}</p>
           </div>
 
-          <div className="product-section">
-            <h4>Products</h4>
+         <div className="product-section">
+  <h4>Products</h4>
 
-            {order.items?.map((item, index) => (
-              <div className="product-row" key={index}>
-                <img src={item.image} alt="" />
-                <div>
-                  <p>{item.name}</p>
-                  <span>Qty: {item.quantity}</span>
-                </div>
-                <b>₹{item.price}</b>
-              </div>
-            ))}
-          </div>
+  {order.items?.map((item, index) => (
+    <div className="product-row" key={index}>
+
+      <img
+        src={item.productId?.image}
+        alt=""
+      />
+
+      <div>
+        <p>{item.productId?.name}</p>
+        <span>Qty: {item.quantity}</span>
+      </div>
+
+      <b>₹{item.productId?.price}</b>
+
+    </div>
+  ))}
+</div>
 
           <div className="status-section">
             <select
