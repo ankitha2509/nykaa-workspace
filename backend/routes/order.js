@@ -4,6 +4,9 @@ const router = express.Router();
 const Order = require("../models/Order");
 const Cart = require("../models/Cart");
 
+const User = require("../models/User");
+const sendInvoice = require("../config/sendInvoice");
+
 router.post("/create/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -25,7 +28,7 @@ router.post("/create/:userId", async (req, res) => {
 
       return {
         productId: item.productId._id,
-        quantity: item.quantity,
+        quantity: item.quantity
       };
     });
 
@@ -36,18 +39,28 @@ router.post("/create/:userId", async (req, res) => {
       address: fullAddress,
       items,
       totalAmount: total,
-      paymentMethod,
+      paymentMethod
     });
 
     await order.save();
 
+    const user = await User.findById(userId);
+
+    if (user?.email) {
+      await sendInvoice(user.email, order);
+    }
+
     await Cart.deleteMany({ userId });
 
-    res.json({ message: "Order placed successfully 🎉" });
+    res.json({
+     message: "Order placed successfully 🎉"
+    });
 
   } catch (err) {
     console.log(err);
-    res.status(500).json({ message: "Error placing order" });
+    res.status(500).json({
+      message: "Error placing order"
+    });
   }
 });
 
