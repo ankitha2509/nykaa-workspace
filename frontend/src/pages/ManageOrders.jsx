@@ -6,8 +6,9 @@ function ManageOrders() {
 
   const fetchOrders = () => {
     fetch("https://backend-1bfu.onrender.com/api/admin/orders")
-      .then((res) => res.json())
-      .then((data) => setOrders(data));
+      .then(res => res.json())
+      .then(data => setOrders(data))
+      .catch(err => console.log(err));
   };
 
   useEffect(() => {
@@ -15,82 +16,86 @@ function ManageOrders() {
   }, []);
 
   const updateStatus = async (id, status) => {
-    await fetch(
-      `https://backend-1bfu.onrender.com/api/admin/orders/${id}`,
-      {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ status }),
-      }
-    );
+    try {
+      await fetch(
+        `https://backend-1bfu.onrender.com/api/admin/orders/${id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ status })
+        }
+      );
 
-    fetchOrders();
+      setOrders(prev =>
+        prev.map(order =>
+          order._id === id ? { ...order, status } : order
+        )
+      );
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  const getColor = (status) => {
+    if (status === "Processing") return "orange";
+    if (status === "Packed") return "#8e44ad";
+    if (status === "Shipped") return "#3498db";
+    if (status === "Delivered") return "green";
+    if (status === "Cancelled") return "red";
+    return "gray";
   };
 
   return (
-    <div className="manage-orders-page">
+    <div className="manage-page">
 
-      <div className="top-bar">
-        <h2>Manage Orders</h2>
-        <span>{orders.length} Orders</span>
-      </div>
+      <h2>All Orders ({orders.length})</h2>
 
-      {orders.map((order) => (
+      {orders.map(order => (
         <div className="order-card" key={order._id}>
 
-          <div className="order-header">
-            <div>
-              <h3>{order.name}</h3>
-              <p>{order.address}</p>
-            </div>
+          <h3>{order.name}</h3>
+          <p>{order.address}</p>
 
-            <div className={`status-badge ${order.status?.toLowerCase()}`}>
-              {order.status || "Pending"}
-            </div>
+          <p><strong>Total:</strong> ₹{order.totalAmount}</p>
+          <p><strong>Payment:</strong> {order.paymentMethod}</p>
+
+          {/* ✅ PRODUCTS LOOP */}
+          <div className="product-section">
+            {order.items?.map((item, i) => (
+              <div className="product-row" key={i}>
+
+                <img
+                  src={item.productId?.image}
+                  alt=""
+                />
+
+                <div>
+                  <p>{item.productId?.name}</p>
+                  <span>Qty: {item.quantity}</span>
+                </div>
+
+                <b>₹{item.productId?.price}</b>
+
+              </div>
+            ))}
           </div>
 
-          <div className="order-details">
-            <p><strong>Total:</strong> ₹{order.totalAmount}</p>
-            <p><strong>Payment:</strong> {order.paymentMethod}</p>
-          </div>
-
-         <div className="product-section">
-  <h4>Products</h4>
-
-  {order.items?.map((item, index) => (
-    <div className="product-row" key={index}>
-
-      <img
-        src={item.productId?.image}
-        alt=""
-      />
-
-      <div>
-        <p>{item.productId?.name}</p>
-        <span>Qty: {item.quantity}</span>
-      </div>
-
-      <b>₹{item.productId?.price}</b>
-
-    </div>
-  ))}
-</div>
-
-          <div className="status-section">
-            <select
-              value={order.status || "Pending"}
-              onChange={(e) =>
-                updateStatus(order._id, e.target.value)
-              }
-            >
-              <option>Pending</option>
-              <option>Placed</option>
-              <option>Shipped</option>
-              <option>Delivered</option>
-            </select>
-          </div>
+          {/* ✅ STATUS */}
+          <select
+            value={order.status || "Processing"}
+            onChange={(e) =>
+              updateStatus(order._id, e.target.value)
+            }
+            style={{
+              backgroundColor: getColor(order.status)
+            }}
+          >
+            <option value="Processing">Processing</option>
+            <option value="Packed">Packed</option>
+            <option value="Shipped">Shipped</option>
+            <option value="Delivered">Delivered</option>
+            <option value="Cancelled">Cancelled</option>
+          </select>
 
         </div>
       ))}
