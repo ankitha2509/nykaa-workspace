@@ -1,20 +1,11 @@
-const nodemailer = require("nodemailer");
+const { Resend } = require("resend");
 
-const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  family: 4, // ✅ FORCE IPv4 (THIS FIXES YOUR ERROR)
-  auth: {
-    user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
-});
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 const sendEmail = async (to, otp) => {
   try {
-    const info = await transporter.sendMail({
-      from: `"Nykaa" <${process.env.EMAIL_USER}>`,
+    await resend.emails.send({
+      from: "onboarding@resend.dev",
       to,
       subject: "Nykaa OTP Verification",
       html: `
@@ -24,10 +15,10 @@ const sendEmail = async (to, otp) => {
       `
     });
 
-    console.log("Email sent:", info.response);
+    console.log("Email sent");
 
   } catch (error) {
-    console.log("Email Error:", error.message);
+    console.log("Email Error:", error);
     throw error;
   }
 };
