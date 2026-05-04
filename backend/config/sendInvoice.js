@@ -40,9 +40,11 @@ const sendInvoice = async (email, order) => {
 
     doc.end();
 
-    // ✅ Wait for file to be created
-    await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => {
+      doc.on("finish", resolve);
+    });
 
+   
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,

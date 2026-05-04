@@ -47,7 +47,7 @@ router.post("/create/:userId", async (req, res) => {
     const user = await User.findById(userId);
 
     if (user?.email) {
-      await sendInvoice(user.email, order);
+      sendInvoice(user.email, order);
     }
 
     await Cart.deleteMany({ userId });
