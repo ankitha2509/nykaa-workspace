@@ -1,13 +1,8 @@
 const nodemailer = require("nodemailer");
 const PDFDocument = require("pdfkit");
-const fs = require("fs");
-const path = require("path");
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
-  family: 4, // ✅ VERY IMPORTANT (fixes your network error)
+  service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
@@ -16,11 +11,10 @@ const transporter = nodemailer.createTransport({
 
 const sendInvoice = async (email, order) => {
   try {
-    const fileName = `invoice-${order._id}.pdf`;
-    const filePath = path.join(__dirname, fileName);
-
     const doc = new PDFDocument();
-    doc.pipe(fs.createWriteStream(filePath));
+
+    let buffers = [];
+    doc.on("data", buffers.push.bind(buffers));
 
     const gst = order.totalAmount * 0.18;
     const finalTotal = order.totalAmount + gst;
@@ -40,11 +34,10 @@ const sendInvoice = async (email, order) => {
 
     doc.end();
 
-      await new Promise((resolve) => {
-      doc.on("finish", resolve);
-    });
+    await new Promise((resolve) => doc.on("end", resolve));
 
-   
+    const pdfBuffer = Buffer.concat(buffers);
+
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
@@ -52,16 +45,11 @@ const sendInvoice = async (email, order) => {
       text: "Thank you for shopping. Your invoice is attached.",
       attachments: [
         {
-          filename: fileName,
-          path: filePath
+          filename: `invoice-${order._id}.pdf`,
+          content: pdfBuffer
         }
       ]
     });
-
-    // ✅ Safe delete
-    if (fs.existsSync(filePath)) {
-      fs.unlinkSync(filePath);
-    }
 
   } catch (err) {
     console.log("Invoice Error:", err.message);

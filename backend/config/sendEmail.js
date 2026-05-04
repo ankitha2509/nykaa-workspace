@@ -9,16 +9,26 @@ const transporter = nodemailer.createTransport({
 });
 
 const sendEmail = async (to, otp) => {
-  await transporter.sendMail({
-    from: process.env.EMAIL_USER,
-    to,
-    subject: "Nykaa OTP Verification",
-    html: `
-      <h2>Your OTP Code</h2>
-      <h1>${otp}</h1>
-      <p>This OTP is valid for 5 minutes.</p>
-    `
-  });
+  try {
+    const info = await transporter.sendMail({
+      from: `"Nykaa" <${process.env.EMAIL_USER}>`,
+      to,
+      subject: "Nykaa OTP Verification",
+      html: `
+        <div style="font-family: Arial; text-align:center;">
+          <h2>Your OTP Code</h2>
+          <h1 style="color:#fc2779;">${otp}</h1>
+          <p>This OTP is valid for 5 minutes.</p>
+        </div>
+      `
+    });
+
+    console.log("Email sent:", info.response);
+
+  } catch (error) {
+    console.log("Email Error:", error.message);
+    throw error; // important → lets route handle error
+  }
 };
 
 module.exports = sendEmail;

@@ -8,6 +8,9 @@ const generateOTP = () => {
   return Math.floor(100000 + Math.random() * 900000).toString();
 };
 
+
+
+// ================= SIGNUP =================
 router.post("/signup/send-otp", async (req, res) => {
   try {
     const { name, mobile, email } = req.body;
@@ -18,7 +21,10 @@ router.post("/signup/send-otp", async (req, res) => {
       });
     }
 
-    const existingUser = await User.findOne({ email });
+    // ✅ check both email + mobile
+    const existingUser = await User.findOne({
+      $or: [{ email }, { mobile }]
+    });
 
     if (existingUser) {
       return res.status(400).json({
@@ -28,6 +34,10 @@ router.post("/signup/send-otp", async (req, res) => {
 
     const otp = generateOTP();
 
+    // ✅ send email first
+    await sendEmail(email, otp);
+
+    // ✅ then save user
     const newUser = new User({
       name,
       mobile,
@@ -36,22 +46,23 @@ router.post("/signup/send-otp", async (req, res) => {
       otpExpires: Date.now() + 5 * 60 * 1000
     });
 
-    await sendEmail(email, otp);
     await newUser.save();
-
-   
 
     res.json({
       message: "OTP sent successfully to email"
     });
 
   } catch (error) {
+    console.log("Signup Error:", error.message);
     res.status(500).json({
-      message: error.message
+      message: "Error sending OTP"
     });
   }
 });
 
+
+
+// ================= LOGIN =================
 router.post("/login/send-otp", async (req, res) => {
   try {
     const { email } = req.body;
@@ -76,6 +87,7 @@ router.post("/login/send-otp", async (req, res) => {
     user.otpExpires = Date.now() + 5 * 60 * 1000;
 
     await user.save();
+
     await sendEmail(email, otp);
 
     res.json({
@@ -83,12 +95,16 @@ router.post("/login/send-otp", async (req, res) => {
     });
 
   } catch (error) {
+    console.log("Login Error:", error.message);
     res.status(500).json({
-      message: error.message
+      message: "Error sending OTP"
     });
   }
 });
 
+
+
+// ================= VERIFY OTP =================
 router.post("/verify-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -101,8 +117,9 @@ router.post("/verify-otp", async (req, res) => {
       });
     }
 
+    // ✅ safe comparison
     if (
-      user.otp !== otp ||
+      String(user.otp) !== String(otp) ||
       !user.otpExpires ||
       user.otpExpires < Date.now()
     ) {
@@ -134,18 +151,20 @@ router.post("/verify-otp", async (req, res) => {
     });
 
   } catch (error) {
+    console.log("Verify OTP Error:", error.message);
     res.status(500).json({
-      message: error.message
+      message: "OTP verification failed"
     });
   }
 });
 
+
+
+// ================= GET USER =================
 router.get("/user/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
-
     res.json(user);
-
   } catch (error) {
     res.status(500).json({
       message: "Error fetching user"
@@ -154,6 +173,8 @@ router.get("/user/:id", async (req, res) => {
 });
 
 
+
+// ================= UPDATE USER =================
 router.put("/update/:id", async (req, res) => {
   try {
     const { name, gender, mobile } = req.body;
@@ -174,5 +195,6 @@ router.put("/update/:id", async (req, res) => {
     });
   }
 });
+
 
 module.exports = router;
