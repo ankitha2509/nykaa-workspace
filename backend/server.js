@@ -1,8 +1,9 @@
+require("dotenv").config();
+
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
 const path = require("path");
-require("dotenv").config();
 
 const authRoutes = require("./routes/authRoutes");
 const productRoutes = require("./routes/product");
@@ -15,31 +16,22 @@ const adminRoutes = require("./routes/admin");
 const app = express();
 
 
+// ✅ FIXED CORS (VERY IMPORTANT)
 app.use(cors({
-  origin: function (origin, callback) {
-
-    if (!origin) return callback(null, true);
-
-    if (
-      origin === "http://localhost:5173" ||
-      origin === "https://nykaa-workspace.vercel.app" ||
-      origin.endsWith(".vercel.app")
-    ) {
-      return callback(null, true);
-    }
-
-    return callback(new Error("CORS blocked"));
-  },
-  credentials: true,
-  methods: ["GET", "POST", "PUT", "DELETE"]
+  origin: true, // allow all (fixes Vercel + localhost)
+  credentials: true
 }));
 
-app.use(express.json());
-app.use("/uploads", express.static("uploads"));
 
+// ✅ Middleware
+app.use(express.json());
+
+
+// ✅ Static files
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 
+// ✅ Routes
 app.use("/api/auth", authRoutes);
 app.use("/api/product", productRoutes);
 app.use("/api/cart", cartRoutes);
@@ -49,33 +41,42 @@ app.use("/api/order", orderRoutes);
 app.use("/api/admin", adminRoutes);
 
 
+// ✅ Test route
 app.post("/api/test", (req, res) => {
   res.send("Test POST route working");
 });
 
+
+// ✅ Root route
 app.get("/", (req, res) => {
-  res.send("Backend Running Successfully");
+  res.send("Backend Running Successfully 🚀");
 });
 
+
+// ✅ MongoDB connection
 mongoose.connect(process.env.MONGO_URI)
   .then(() => {
-    console.log("MongoDB Connected Successfully");
+    console.log("✅ MongoDB Connected Successfully");
   })
   .catch((err) => {
-    console.log("MongoDB Connection Error:", err);
-    process.exit(1); 
+    console.log("❌ MongoDB Connection Error:", err);
+    process.exit(1);
   });
 
+
+// Optional logs
 mongoose.connection.on("connected", () => {
-  console.log("Mongoose connection event: CONNECTED");
+  console.log("📡 Mongoose CONNECTED");
 });
 
 mongoose.connection.on("error", (err) => {
-  console.log("Mongoose runtime error:", err);
+  console.log("⚠️ Mongoose ERROR:", err);
 });
 
+
+// ✅ Start server
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {
-  console.log(`Server running on port ${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
