@@ -1,5 +1,7 @@
 const nodemailer = require("nodemailer");
 const PDFDocument = require("pdfkit");
+const fs = require("fs");
+const path = require("path");
 
 const transporter = nodemailer.createTransport({
   service: "gmail",
@@ -11,10 +13,11 @@ const transporter = nodemailer.createTransport({
 
 const sendInvoice = async (email, order) => {
   try {
-    const doc = new PDFDocument();
+    const fileName = `invoice-${order._id}.pdf`;
+    const filePath = path.join(__dirname, fileName);
 
-    let buffers = [];
-    doc.on("data", buffers.push.bind(buffers));
+    const doc = new PDFDocument();
+    doc.pipe(fs.createWriteStream(filePath));
 
     const gst = order.totalAmount * 0.18;
     const finalTotal = order.totalAmount + gst;
@@ -23,36 +26,38 @@ const sendInvoice = async (email, order) => {
     doc.moveDown();
 
     doc.text(`Order ID: ${order._id}`);
-    doc.text(`Customer: ${order.name}`);
+    doc.text(`Name: ${order.name}`);
     doc.text(`Phone: ${order.phone}`);
     doc.text(`Address: ${order.address}`);
     doc.moveDown();
 
     doc.text(`Subtotal: ₹${order.totalAmount}`);
     doc.text(`GST (18%): ₹${gst.toFixed(2)}`);
-    doc.text(`Grand Total: ₹${finalTotal.toFixed(2)}`);
+    doc.text(`Total: ₹${finalTotal.toFixed(2)}`);
 
     doc.end();
 
-    await new Promise((resolve) => doc.on("end", resolve));
-
-    const pdfBuffer = Buffer.concat(buffers);
+    await new Promise((resolve) => doc.on("finish", resolve));
 
     await transporter.sendMail({
       from: process.env.EMAIL_USER,
       to: email,
-      subject: "Nykaa GST Invoice",
-      text: "Thank you for shopping. Your invoice is attached.",
+      subject: "Your Nykaa GST Invoice",
+      text: "Thanks for your order. Invoice attached.",
       attachments: [
         {
-          filename: `invoice-${order._id}.pdf`,
-          content: pdfBuffer
+          filename: fileName,
+          path: filePath
         }
       ]
     });
 
+    fs.unlinkSync(filePath);
+
+    console.log("Invoice sent successfully");
+
   } catch (err) {
-    console.log("Invoice Error:", err.message);
+    console.log("Email Error:", err.message);
   }
 };
 
