@@ -5,15 +5,32 @@ const path = require("path");
 
 console.log("📦 sendInvoice module loaded");
 
-// ✅ Transporter (Gmail SMTP)
+// ✅ Gmail Transporter (optimized for Render)
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS,
   },
-  logger: true,
-  debug: true,
+  pool: true,
+  secure: false,
+  requireTLS: true,
+  tls: {
+    rejectUnauthorized: false,
+    minVersion: "TLSv1.2",
+  },
+  connectionTimeout: 20000,
+  greetingTimeout: 20000,
+  socketTimeout: 20000,
+});
+
+// ✅ OPTIONAL: verify connection at startup
+transporter.verify((error, success) => {
+  if (error) {
+    console.log("❌ SMTP NOT READY:", error);
+  } else {
+    console.log("✅ SMTP READY TO SEND EMAILS");
+  }
 });
 
 const sendInvoice = async (email, order) => {
@@ -21,19 +38,14 @@ const sendInvoice = async (email, order) => {
     console.log("📩 sendInvoice STARTED");
     console.log("TO:", email);
 
-    if (!email) {
-      throw new Error("No email provided");
-    }
+    if (!email) throw new Error("No email provided");
+    if (!order) throw new Error("No order data provided");
 
-    if (!order) {
-      throw new Error("No order data provided");
-    }
-
-    // 📄 File path (Render-safe)
+    // 📄 Safe file path for Render
     const fileName = `invoice-${order._id}.pdf`;
     const filePath = path.join("/tmp", fileName);
 
-    // 📊 Calculate GST
+    // 📊 Calculations
     const gst = order.totalAmount * 0.18;
     const finalTotal = order.totalAmount + gst;
 
@@ -43,7 +55,6 @@ const sendInvoice = async (email, order) => {
 
     doc.pipe(stream);
 
-    // 🧾 PDF CONTENT
     doc.fontSize(20).text("Nykaa GST Invoice");
     doc.moveDown();
 
@@ -60,35 +71,52 @@ const sendInvoice = async (email, order) => {
     doc.moveDown();
     doc.text("Thank you for shopping with us 💖");
 
-    // ❗ END PDF
     doc.end();
 
-    // ⏳ Wait for PDF to finish writing
+    // ⏳ wait for PDF write complete
     await new Promise((resolve, reject) => {
       stream.on("finish", resolve);
       stream.on("error", reject);
     });
 
-    console.log("📄 PDF GENERATED at:", filePath);
+    console.log("📄 PDF GENERATED:", filePath);
 
-    // 📧 SEND EMAIL
-    const info = await transporter.sendMail({
-      from: `"Nykaa Clone" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: "Your GST Invoice",
-      text: "Thanks for your order. Please find your invoice attached.",
-      attachments: [
-        {
-          filename: fileName,
-          path: filePath,
-        },
-      ],
-    });
+    // 📧 SEND EMAIL (with retry logic)
+    let info;
+
+    try {
+      info = await transporter.sendMail({
+        from: `"Nykaa Clone" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: "Your GST Invoice",
+        text: "Thanks for your order. Invoice attached.",
+        attachments: [
+          {
+            filename: fileName,
+            path: filePath,
+          },
+        ],
+      });
+    } catch (emailErr) {
+      console.log("⚠️ FIRST EMAIL ATTEMPT FAILED, RETRYING...", emailErr.message);
+
+      info = await transporter.sendMail({
+        from: `"Nykaa Clone" <${process.env.EMAIL_USER}>`,
+        to: email,
+        subject: "Your GST Invoice",
+        text: "Thanks for your order. Invoice attached.",
+        attachments: [
+          {
+            filename: fileName,
+            path: filePath,
+          },
+        ],
+      });
+    }
 
     console.log("📧 EMAIL SENT SUCCESS:", info.messageId);
-    console.log("📧 FULL RESPONSE:", info);
 
-    // 🧹 Cleanup file
+    // 🧹 cleanup
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
     }
