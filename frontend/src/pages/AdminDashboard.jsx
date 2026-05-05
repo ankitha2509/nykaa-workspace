@@ -44,7 +44,7 @@ function AdminDashboard() {
 
       {/* HEADER */}
       <header className="admin-header">
-        <div className="logo">NYKAA ADMIN</div>
+        <div className="logo">💄 NYKAA ADMIN PANEL</div>
       </header>
 
       <div className="admin-body">
@@ -56,7 +56,7 @@ function AdminDashboard() {
             <div className="menu-section">
               <p className="menu-title">GENERAL</p>
               <ul>
-                <li onClick={() => navigate("/admin/dashboard")}>Dashboard</li>
+                <li onClick={() => navigate("/admindashboard")}>Dashboard</li>
                 <li onClick={() => navigate("/admin/add-product")}>Add Product</li>
                 <li onClick={() => navigate("/admin/view-products")}>View Products</li>
               </ul>
@@ -91,30 +91,32 @@ function AdminDashboard() {
 
           <h1>Dashboard Overview</h1>
 
-          {/* ✅ TOP CARDS */}
+          {/* 🔥 CARDS */}
           <div className="dashboard-cards">
+
             <div className="card">
-              <h3>Total Sales</h3>
-              <h2>₹50,000</h2>
+              <h3>💰 Total Sales</h3>
+              <p>₹50,000</p>
             </div>
 
             <div className="card">
-              <h3>Total Orders</h3>
-              <h2>120</h2>
+              <h3>📦 Orders</h3>
+              <p>120</p>
             </div>
 
             <div className="card">
-              <h3>Users</h3>
-              <h2>85</h2>
+              <h3>👤 Users</h3>
+              <p>85</p>
             </div>
 
             <div className="card">
-              <h3>Revenue</h3>
-              <h2>₹75,000</h2>
+              <h3>💳 Payments</h3>
+              <p>₹75,000</p>
             </div>
+
           </div>
 
-          {/* ✅ CHARTS */}
+          {/* 🔥 CHARTS */}
           <div className="charts-grid">
 
             {/* LINE */}

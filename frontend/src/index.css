@@ -13,3 +13,9 @@ html, body, #root {
 body {
   margin: 0;
 }
+
+body {
+  margin: 0;
+  font-family: 'Poppins', sans-serif;
+  scroll-behavior: smooth;
+}
