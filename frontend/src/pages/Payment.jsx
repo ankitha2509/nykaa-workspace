@@ -15,11 +15,13 @@ function Payment() {
 
   const user = JSON.parse(localStorage.getItem("user")) || {};
 
+  const API = "https://backend-1bfu.onrender.com";
+
   useEffect(() => {
     const addr = JSON.parse(localStorage.getItem("selectedAddress"));
     setAddress(addr);
 
-    fetch(`https://backend-1bfu.onrender.com/api/cart/${user._id}`)
+    fetch(`${API}/api/cart/${user._id}`)
       .then((res) => res.json())
       .then((data) => setCartItems(data));
   }, [user._id]);
@@ -29,15 +31,15 @@ function Payment() {
     0
   );
 
+  // ✅ PLACE ORDER
   const placeOrder = async () => {
-    if (!address) {
-      alert("Please select address");
-      return;
-    }
+    try {
+      if (!address) {
+        alert("Please select address");
+        return;
+      }
 
-    const res = await fetch(
-      `https://backend-1bfu.onrender.com/api/order/create/${user._id}`,
-      {
+      const res = await fetch(`${API}/api/order/create/${user._id}`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -46,32 +48,43 @@ function Payment() {
           ...address,
           paymentMethod: method,
         }),
+      });
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        alert(data.message || "Order failed");
+        return;
       }
-    );
 
-    const data = await res.json();
+      alert(data.message);
 
-    alert(data.message);
-    navigate("/orders");
+      // ✅ IMPORTANT: delay gives backend time to respond cleanly
+      setTimeout(() => {
+        navigate("/orders");
+      }, 300);
+
+    } catch (err) {
+      console.log(err);
+      alert("Order error");
+    }
   };
 
+  // ✅ STRIPE PAYMENT
   const handleCardPayment = async () => {
-    if (!stripe || !elements) {
-      alert("Stripe not loaded");
-      return;
-    }
-
     try {
-      const res = await fetch(
-        "https://backend-1bfu.onrender.com/api/payment/create-payment",
-        {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ amount: total }),
-        }
-      );
+      if (!stripe || !elements) {
+        alert("Stripe not loaded");
+        return;
+      }
+
+      const res = await fetch(`${API}/api/payment/create-payment`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ amount: total }),
+      });
 
       const data = await res.json();
 
@@ -88,11 +101,12 @@ function Payment() {
         alert("Payment Failed");
       } else {
         alert("Payment Successful");
-        placeOrder();
+        await placeOrder();
       }
+
     } catch (err) {
       console.log(err);
-      alert("Something went wrong");
+      alert("Payment error");
     }
   };
 
@@ -105,38 +119,22 @@ function Payment() {
 
         <div className="payment-options">
 
-          <div
-            className={`option ${method === "UPI" ? "active" : ""}`}
-            onClick={() => setMethod("UPI")}
-          >
+          <div className={`option ${method === "UPI" ? "active" : ""}`}
+            onClick={() => setMethod("UPI")}>
             UPI Payment
           </div>
 
-          <div
-            className={`option ${method === "CARD" ? "active" : ""}`}
-            onClick={() => setMethod("CARD")}
-          >
-            Credit / Debit Card
+          <div className={`option ${method === "CARD" ? "active" : ""}`}
+            onClick={() => setMethod("CARD")}>
+            Card
           </div>
 
-          <div
-            className={`option ${method === "COD" ? "active" : ""}`}
-            onClick={() => setMethod("COD")}
-          >
-            Cash On Delivery
+          <div className={`option ${method === "COD" ? "active" : ""}`}
+            onClick={() => setMethod("COD")}>
+            COD
           </div>
 
         </div>
-
-        {method === "UPI" && (
-          <div className="upi-box">
-            <img
-              src="https://api.qrserver.com/v1/create-qr-code/?size=180x180&data=upi-payment"
-              alt="QR"
-            />
-            <p>Scan using GPay / PhonePe</p>
-          </div>
-        )}
 
         {method === "CARD" && (
           <div className="card-box">
@@ -155,36 +153,6 @@ function Payment() {
 
       </div>
 
-      <div className="payment-right">
-
-        <div className="card">
-          <h4>Deliver To</h4>
-          {address && (
-            <>
-              <p>{address.name}</p>
-              <p>{address.address1}</p>
-              <p>{address.city} - {address.pincode}</p>
-            </>
-          )}
-        </div>
-
-        <div className="card">
-          <h4>Bag Items ({cartItems.length})</h4>
-
-          {cartItems.map((item) => (
-            <div className="bag-item" key={item._id}>
-              <img src={item.productId.image} alt="" />
-              <span>{item.productId.name}</span>
-            </div>
-          ))}
-        </div>
-
-        <div className="card">
-          <h4>Total</h4>
-          <p>₹{total}</p>
-        </div>
-
-      </div>
     </div>
   );
 }

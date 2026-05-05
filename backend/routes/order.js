@@ -24,7 +24,6 @@ router.post("/create/:userId", async (req, res) => {
 
     const fullAddress = `${address1}, ${address2}, ${city} - ${pincode}`;
 
-    // get cart items
     const cartItems = await Cart.find({ userId }).populate("productId");
 
     if (!cartItems.length) {
@@ -42,7 +41,6 @@ router.post("/create/:userId", async (req, res) => {
       };
     });
 
-    // create order
     const order = new Order({
       userId,
       name,
@@ -55,20 +53,15 @@ router.post("/create/:userId", async (req, res) => {
 
     await order.save();
 
-    // get user email
     const user = await User.findById(userId);
 
-    // 📩 SEND GST INVOICE EMAIL
-    if (user && user.email) {
-      try {
-        await sendInvoice(user.email, order);
-        console.log("Invoice email sent");
-      } catch (emailErr) {
-        console.log("Invoice email failed:", emailErr.message);
-      }
+    // ✅ NON-BLOCKING EMAIL
+    if (user?.email) {
+      sendInvoice(user.email, order)
+        .then(() => console.log("Invoice sent"))
+        .catch((err) => console.log("Email error:", err.message));
     }
 
-    // clear cart
     await Cart.deleteMany({ userId });
 
     res.json({
@@ -77,7 +70,7 @@ router.post("/create/:userId", async (req, res) => {
     });
 
   } catch (err) {
-    console.log("Order Error:", err);
+    console.log(err);
     res.status(500).json({
       message: "Error placing order"
     });
@@ -85,7 +78,7 @@ router.post("/create/:userId", async (req, res) => {
 });
 
 
-// GET USER ORDERS
+// GET ORDERS
 router.get("/:userId", async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.params.userId })

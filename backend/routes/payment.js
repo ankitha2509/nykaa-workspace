@@ -8,12 +8,8 @@ router.post("/create-payment", async (req, res) => {
   try {
     const { amount } = req.body;
 
-    if (!amount) {
-      return res.status(400).json({ error: "Amount required" });
-    }
-
     const paymentIntent = await stripe.paymentIntents.create({
-      amount: amount * 100, 
+      amount: amount * 100,
       currency: "inr",
       payment_method_types: ["card"],
     });
@@ -23,7 +19,7 @@ router.post("/create-payment", async (req, res) => {
     });
 
   } catch (err) {
-    console.log("STRIPE ERROR:", err.message);
+    console.log(err.message);
     res.status(500).json({ error: "Stripe failed" });
   }
 });
