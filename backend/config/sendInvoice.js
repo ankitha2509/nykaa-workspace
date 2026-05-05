@@ -6,7 +6,9 @@ const path = require("path");
 console.log("📦 sendInvoice module loaded");
 
 const transporter = nodemailer.createTransport({
-  service: "gmail",
+  host: "smtp.gmail.com",
+  port: 587,
+  secure: false,
   auth: {
     user: process.env.EMAIL_USER,
     pass: process.env.EMAIL_PASS
@@ -49,18 +51,27 @@ const sendInvoice = async (email, order) => {
 
     console.log("📄 PDF generated, sending email...");
 
-    await transporter.sendMail({
-      from: `"Nykaa Clone" <${process.env.EMAIL_USER}>`,
-      to: email,
-      subject: "Your GST Invoice",
-      text: "Thanks for your order. Invoice attached.",
-      attachments: [
-        {
-          filename: fileName,
-          path: filePath
-        }
-      ]
-    });
+    try {
+  const info = await transporter.sendMail({
+    from: `"Nykaa Clone" <${process.env.EMAIL_USER}>`,
+    to: email,
+    subject: "Your GST Invoice",
+    text: "Thanks for your order. Invoice attached.",
+    attachments: [
+      {
+        filename: fileName,
+        path: filePath
+      }
+    ]
+  });
+
+  console.log("📧 EMAIL SENT SUCCESS:", info.messageId);
+
+} catch (err) {
+  console.log("❌ SMTP FULL ERROR:", err);
+}
+
+    
 
     console.log("📧 Email SENT SUCCESSFULLY");
 
