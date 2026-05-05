@@ -24,7 +24,7 @@ function AdminDashboard() {
         const res = await axios.get(
           "https://backend-1bfu.onrender.com/api/dashboard/stats"
         );
-        console.log("STATS:", res.data); // DEBUG
+        console.log("STATS:", res.data);
         setStats(res.data);
       } catch (err) {
         console.log("Dashboard error:", err);
@@ -37,18 +37,9 @@ function AdminDashboard() {
   const COLORS = ["#fc2779", "#36A2EB", "#FFCE56"];
 
   const ordersData = [
-    {
-      name: "Completed",
-      value: stats?.statusCount?.Completed || 0,
-    },
-    {
-      name: "Pending",
-      value: stats?.statusCount?.Pending || 0,
-    },
-    {
-      name: "Cancelled",
-      value: stats?.statusCount?.Cancelled || 0,
-    },
+    { name: "Completed", value: stats?.statusCount?.Completed || 0 },
+    { name: "Pending", value: stats?.statusCount?.Pending || 0 },
+    { name: "Cancelled", value: stats?.statusCount?.Cancelled || 0 },
   ];
 
   return (
