@@ -55,8 +55,8 @@ const sendInvoice = async (email, order) => {
     console.log("📄 PDF GENERATED:", filePath);
 
     await resend.emails.send({
-      from: "Nykaa <ankkithaapujari093001@gmail.com>", 
-      to: email,
+      from: "Nykaa <onboarding@resend.dev>", 
+      to: "ankkithaapujari093001@gmail.com",
       subject: "Your GST Invoice - Nykaa",
 
       html: `
