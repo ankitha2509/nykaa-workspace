@@ -1,9 +1,10 @@
 import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import axios from "axios";
 import "./AdminDashboard.css";
 
 import {
   LineChart, Line, XAxis, YAxis, Tooltip, CartesianGrid,
-  BarChart, Bar,
   PieChart, Pie, Cell,
   ResponsiveContainer
 } from "recharts";
@@ -11,47 +12,51 @@ import {
 function AdminDashboard() {
   const navigate = useNavigate();
 
+  const [stats, setStats] = useState(null);
+
   const logoutAdmin = () => {
     localStorage.removeItem("adminToken");
     navigate("/admin");
   };
 
-  // SAMPLE DATA
-  const salesData = [
-    { month: "Jan", sales: 4000 },
-    { month: "Feb", sales: 3000 },
-    { month: "Mar", sales: 5000 },
-    { month: "Apr", sales: 4500 },
-  ];
 
-  const ordersData = [
-    { name: "Completed", value: 70 },
-    { name: "Pending", value: 20 },
-    { name: "Cancelled", value: 10 },
-  ];
+  useEffect(() => {
+    const fetchStats = async () => {
+      try {
+        const res = await axios.get(
+          "https://backend-1bfu.onrender.com/api/dashboard/stats"
+        );
+        setStats(res.data);
+      } catch (err) {
+        console.log("Dashboard error:", err);
+      }
+    };
 
-  const usersData = [
-    { month: "Jan", users: 50 },
-    { month: "Feb", users: 80 },
-    { month: "Mar", users: 120 },
-    { month: "Apr", users: 150 },
-  ];
+    fetchStats();
+  }, []);
 
   const COLORS = ["#fc2779", "#36A2EB", "#FFCE56"];
+
+  const ordersData = stats
+    ? [
+        { name: "Completed", value: stats.statusCount.Completed },
+        { name: "Pending", value: stats.statusCount.Pending },
+        { name: "Cancelled", value: stats.statusCount.Cancelled },
+      ]
+    : [];
 
   return (
     <div className="admin-wrapper">
 
-      {/* HEADER */}
+   
       <header className="admin-header">
-        <div className="logo">💄 NYKAA ADMIN PANEL</div>
+        <div className="logo"> NYKAA ADMIN PANEL</div>
       </header>
 
       <div className="admin-body">
 
-        {/* SIDEBAR */}
+        
         <div className="sidebar">
-
           <div>
             <div className="menu-section">
               <p className="menu-title">GENERAL</p>
@@ -69,13 +74,6 @@ function AdminDashboard() {
                 <li onClick={() => navigate("/admin/manage-users")}>Manage Users</li>
               </ul>
             </div>
-
-            <div className="menu-section">
-              <p className="menu-title">SUPPORT</p>
-              <ul>
-                <li onClick={() => navigate("/admin/help")}>Help Center</li>
-              </ul>
-            </div>
           </div>
 
           <div className="logout-section">
@@ -83,47 +81,44 @@ function AdminDashboard() {
               Logout
             </button>
           </div>
-
         </div>
 
-        {/* MAIN CONTENT */}
+        
         <div className="main-content">
-
           <h1>Dashboard Overview</h1>
 
-          {/* 🔥 CARDS */}
+       
           <div className="dashboard-cards">
 
             <div className="card">
               <h3>💰 Total Sales</h3>
-              <p>₹50,000</p>
+              <p>₹{stats?.totalSales || 0}</p>
             </div>
 
             <div className="card">
               <h3>📦 Orders</h3>
-              <p>120</p>
+              <p>{stats?.totalOrders || 0}</p>
             </div>
 
             <div className="card">
               <h3>👤 Users</h3>
-              <p>85</p>
+              <p>{stats?.totalUsers || 0}</p>
             </div>
 
             <div className="card">
-              <h3>💳 Payments</h3>
-              <p>₹75,000</p>
+              <h3>💳 Revenue</h3>
+              <p>₹{stats?.totalRevenue || 0}</p>
             </div>
 
           </div>
 
-          {/* 🔥 CHARTS */}
           <div className="charts-grid">
 
-            {/* LINE */}
+        
             <div className="chart-card">
               <h3>Sales Trend</h3>
               <ResponsiveContainer width="100%" height={250}>
-                <LineChart data={salesData}>
+                <LineChart data={stats?.salesData || []}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
@@ -133,21 +128,7 @@ function AdminDashboard() {
               </ResponsiveContainer>
             </div>
 
-            {/* BAR */}
-            <div className="chart-card">
-              <h3>User Growth</h3>
-              <ResponsiveContainer width="100%" height={250}>
-                <BarChart data={usersData}>
-                  <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="month" />
-                  <YAxis />
-                  <Tooltip />
-                  <Bar dataKey="users" fill="#36A2EB" />
-                </BarChart>
-              </ResponsiveContainer>
-            </div>
-
-            {/* PIE */}
+          
             <div className="chart-card">
               <h3>Orders Status</h3>
               <ResponsiveContainer width="100%" height={250}>
@@ -155,8 +136,6 @@ function AdminDashboard() {
                   <Pie
                     data={ordersData}
                     dataKey="value"
-                    cx="50%"
-                    cy="50%"
                     outerRadius={80}
                     label
                   >
@@ -170,7 +149,6 @@ function AdminDashboard() {
             </div>
 
           </div>
-
         </div>
       </div>
     </div>
