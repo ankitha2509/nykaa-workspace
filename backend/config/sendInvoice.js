@@ -13,40 +13,99 @@ const sendInvoice = async (email, order) => {
     if (!email) throw new Error("No email provided");
     if (!order) throw new Error("No order data provided");
 
-   
     const fileName = `invoice-${order._id}.pdf`;
     const filePath = path.join("/tmp", fileName);
 
-   
     const gst = order.totalAmount * 0.18;
     const finalTotal = order.totalAmount + gst;
 
-
-    const doc = new PDFDocument();
+    const doc = new PDFDocument({ margin: 50 });
     const stream = fs.createWriteStream(filePath);
 
     doc.pipe(stream);
 
-  
-    doc.fontSize(20).text("Nykaa GST Invoice");
-    doc.moveDown();
+    // ✅ LOGO (CENTERED PROPERLY)
+    const logoPath = path.join(__dirname, "../assets/nykaa-logo.png");
 
-    doc.fontSize(12).text(`Order ID: ${order._id}`);
+    if (fs.existsSync(logoPath)) {
+      doc.image(
+        logoPath,
+        doc.page.width / 2 - 60, // center horizontally
+        20,
+        { width: 120 }
+      );
+      doc.moveDown(4);
+    } else {
+      console.log("❌ Logo not found at:", logoPath);
+    }
+
+    // ✅ HEADER
+    doc
+      .fontSize(18)
+      .fillColor("#fc2779")
+      .text("NYKAA GST INVOICE", { align: "center" });
+
+    doc.moveDown(1);
+
+    // Divider
+    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
+    doc.moveDown(1);
+
+    // ✅ CUSTOMER DETAILS
+    doc.fontSize(12).fillColor("black");
+    doc.text(`Order ID: ${order._id}`);
     doc.text(`Name: ${order.name}`);
     doc.text(`Phone: ${order.phone}`);
     doc.text(`Address: ${order.address}`);
+    doc.moveDown(1);
+
+    // Divider
+    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
+    doc.moveDown(1);
+
+    // ✅ TABLE HEADER
+    doc.fontSize(13).fillColor("#fc2779").text("Order Summary");
+    doc.moveDown(0.5);
+
+    doc.fillColor("black");
+    doc.text("Description", 50, doc.y);
+    doc.text("Amount", 400, doc.y);
+    doc.moveDown(0.5);
+
+    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
+    doc.moveDown(0.5);
+
+    // ✅ VALUES
+    doc.text("Subtotal", 50, doc.y);
+    doc.text(`₹${order.totalAmount}`, 400, doc.y);
     doc.moveDown();
 
-    doc.text(`Subtotal: ₹${order.totalAmount}`);
-    doc.text(`GST (18%): ₹${gst.toFixed(2)}`);
-    doc.text(`Total: ₹${finalTotal.toFixed(2)}`);
-
+    doc.text("GST (18%)", 50, doc.y);
+    doc.text(`₹${gst.toFixed(2)}`, 400, doc.y);
     doc.moveDown();
-    doc.text("Thank you for shopping with us");
+
+    // Divider
+    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
+    doc.moveDown();
+
+    // ✅ TOTAL HIGHLIGHT
+    doc.fontSize(14).fillColor("#fc2779");
+    doc.text("Total", 50, doc.y);
+    doc.text(`₹${finalTotal.toFixed(2)}`, 400, doc.y);
+
+    doc.moveDown(2);
+
+    // ✅ FOOTER
+    doc
+      .fontSize(10)
+      .fillColor("gray")
+      .text("Thank you for shopping with Nykaa 💖", {
+        align: "center",
+      });
 
     doc.end();
 
-  
+    // wait for PDF
     await new Promise((resolve, reject) => {
       stream.on("finish", resolve);
       stream.on("error", reject);
@@ -54,51 +113,12 @@ const sendInvoice = async (email, order) => {
 
     console.log("📄 PDF GENERATED:", filePath);
 
+    // ✅ EMAIL
     await resend.emails.send({
-      from: "Nykaa <onboarding@resend.dev>", 
+      from: "Nykaa <onboarding@resend.dev>",
       to: "ankkithaapujari093001@gmail.com",
       subject: "Your GST Invoice - Nykaa",
-
-      html: `
-      <div style="font-family: Arial, sans-serif; background-color: #f6f6f6; padding: 20px;">
-        
-        <div style="max-width: 600px; margin: auto; background: #ffffff; border-radius: 10px; overflow: hidden; box-shadow: 0 4px 10px rgba(0,0,0,0.1);">
-          
-          <!-- HEADER WITH LOGO -->
-          <div style="background: #fc2779; padding: 20px; text-align: center;">
-            <img src="https://upload.wikimedia.org/wikipedia/commons/2/24/Nykaa_Logo.png" width="120" />
-          </div>
-
-          <!-- BODY -->
-          <div style="padding: 20px;">
-            <h2 style="color: #333;">Thank you for your order! 💖</h2>
-            <p style="color: #555;">
-              Hi ${order.name || "Customer"},<br><br>
-              We’ve received your order successfully. Your GST invoice is attached with this email.
-            </p>
-
-            <div style="background: #f9f9f9; padding: 15px; border-radius: 8px; margin: 20px 0;">
-              <p><strong>Order ID:</strong> ${order._id}</p>
-              <p><strong>Total Amount:</strong> ₹${finalTotal.toFixed(2)}</p>
-            </div>
-
-            <div style="text-align: center; margin: 30px 0;">
-              <a href="#" style="background: #fc2779; color: white; padding: 12px 20px; border-radius: 5px; text-decoration: none;">
-                View Order
-              </a>
-            </div>
-          </div>
-
-          <!-- FOOTER -->
-          <div style="background: #fafafa; padding: 15px; text-align: center; font-size: 12px; color: #888;">
-            <p>© 2026 Nykaa Clone. All rights reserved.</p>
-            <p>Support: support@nykaa.com</p>
-          </div>
-
-        </div>
-      </div>
-      `,
-
+      text: "Your invoice is attached. Thank you for shopping with Nykaa.",
       attachments: [
         {
           filename: fileName,
@@ -108,7 +128,6 @@ const sendInvoice = async (email, order) => {
     });
 
     console.log("EMAIL SENT SUCCESS");
-
 
     if (fs.existsSync(filePath)) {
       fs.unlinkSync(filePath);
