@@ -5,24 +5,30 @@ const path = require("path");
 
 console.log("📦 sendInvoice module loaded");
 
+// ✅ Better SMTP config for Gmail + Render
 const transporter = nodemailer.createTransport({
   host: "smtp.gmail.com",
   port: 587,
   secure: false,
   auth: {
     user: process.env.EMAIL_USER,
-    pass: process.env.EMAIL_PASS
-  }
+    pass: process.env.EMAIL_PASS,
+  },
+  tls: {
+    rejectUnauthorized: false,
+  },
 });
 
 const sendInvoice = async (email, order) => {
   try {
-    // 🔥 DEBUG LOGS (ADD HERE)
     console.log("📩 sendInvoice STARTED");
     console.log("TO:", email);
-    console.log("ENV EMAIL_USER:", process.env.EMAIL_USER);
-    console.log("ENV EMAIL_PASS EXISTS:", !!process.env.EMAIL_PASS);
 
+    if (!email) {
+      throw new Error("No email provided");
+    }
+
+    // 📄 Create PDF
     const fileName = `invoice-${order._id}.pdf`;
     const filePath = path.join(__dirname, fileName);
 
@@ -39,46 +45,46 @@ const sendInvoice = async (email, order) => {
     doc.text(`Name: ${order.name}`);
     doc.text(`Phone: ${order.phone}`);
     doc.text(`Address: ${order.address}`);
-
     doc.moveDown();
+
     doc.text(`Subtotal: ₹${order.totalAmount}`);
     doc.text(`GST (18%): ₹${gst.toFixed(2)}`);
     doc.text(`Total: ₹${finalTotal.toFixed(2)}`);
 
     doc.end();
 
-    await new Promise((resolve) => doc.on("finish", resolve));
+    await new Promise((resolve, reject) => {
+      doc.on("finish", resolve);
+      doc.on("error", reject);
+    });
 
-    console.log("📄 PDF generated, sending email...");
+    console.log("📄 PDF GENERATED");
 
-    try {
-  const info = await transporter.sendMail({
-    from: `"Nykaa Clone" <${process.env.EMAIL_USER}>`,
-    to: email,
-    subject: "Your GST Invoice",
-    text: "Thanks for your order. Invoice attached.",
-    attachments: [
-      {
-        filename: fileName,
-        path: filePath
-      }
-    ]
-  });
+    // 📧 SEND EMAIL
+    const info = await transporter.sendMail({
+      from: `"Nykaa Clone" <${process.env.EMAIL_USER}>`,
+      to: email,
+      subject: "Your GST Invoice",
+      text: "Thanks for your order. Invoice attached.",
+      attachments: [
+        {
+          filename: fileName,
+          path: filePath,
+        },
+      ],
+    });
 
-  console.log("📧 EMAIL SENT SUCCESS:", info.messageId);
+    console.log("📧 EMAIL SENT SUCCESS:", info.messageId);
 
-} catch (err) {
-  console.log("❌ SMTP FULL ERROR:", err);
-}
+    // 🧹 delete file safely
+    if (fs.existsSync(filePath)) {
+      fs.unlinkSync(filePath);
+    }
 
-    
-
-    console.log("📧 Email SENT SUCCESSFULLY");
-
-    fs.unlinkSync(filePath);
-
+    return true;
   } catch (err) {
-    console.log("❌ Email Error FULL:", err);
+    console.log("❌ SEND INVOICE ERROR:", err.message);
+    return false;
   }
 };
 
