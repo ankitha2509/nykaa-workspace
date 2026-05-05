@@ -8,7 +8,6 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 const sendInvoice = async (email, order) => {
   try {
     console.log("sendInvoice STARTED");
-    console.log("TO:", email);
 
     if (!email) throw new Error("No email provided");
     if (!order) throw new Error("No order data provided");
@@ -25,30 +24,24 @@ const sendInvoice = async (email, order) => {
 
     // ================= LOGO =================
     const logoPath = path.join(__dirname, "../assets/nykaa-logo.png");
-    console.log("Checking logo:", logoPath);
 
     if (fs.existsSync(logoPath)) {
-      doc.image(logoPath, 50, 30, { width: 90 });
-    } else {
-      console.log("❌ Logo NOT FOUND");
+      doc.image(logoPath, 50, 40, { width: 90 });
     }
 
-    // ================= COMPANY INFO =================
+    // ================= COMPANY INFO (RIGHT) =================
     doc
       .fontSize(10)
       .fillColor("gray")
-      .text("Nykaa Pvt Ltd", 350, 40)
-      .text("Mumbai, India")
-      .text("GSTIN: 27AAACN1234A1Z5");
+      .text("Nykaa Pvt Ltd", 400, 40)
+      .text("Mumbai, India", 400, 55)
+      .text("GSTIN: 27AAACN1234A1Z5", 400, 70);
 
     // ================= TITLE =================
-    doc.moveDown(3);
     doc
       .fontSize(20)
       .fillColor("#fc2779")
-      .text("GST INVOICE", { align: "center" });
-
-    doc.moveDown(1);
+      .text("GST INVOICE", 0, 120, { align: "center" });
 
     // ================= META =================
     const date = new Date().toLocaleDateString();
@@ -56,85 +49,88 @@ const sendInvoice = async (email, order) => {
     doc
       .fontSize(11)
       .fillColor("black")
-      .text(`Invoice No: INV-${order._id}`, 50)
-      .text(`Date: ${date}`, 400);
+      .text(`Invoice No: INV-${order._id}`, 50, 160)
+      .text(`Date: ${date}`, 400, 160);
 
-    doc.moveDown();
+    // ================= LINE =================
+    doc.moveTo(50, 185).lineTo(550, 185).stroke();
 
-    // divider
-    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
-    doc.moveDown();
+    // ================= BILL TO =================
+    doc.fontSize(12).text("Bill To:", 50, 200);
 
-    // ================= CUSTOMER =================
-    doc.fontSize(12).text("Bill To:");
-    doc.fontSize(11).text(order.name);
-    doc.text(order.address);
-    doc.text(order.phone);
-
-    doc.moveDown();
+    doc
+      .fontSize(11)
+      .text(order.name, 50, 220)
+      .text(order.address, 50, 235)
+      .text(order.phone, 50, 250);
 
     // ================= TABLE HEADER =================
+    const tableTop = 300;
+
     doc
       .fontSize(12)
       .fillColor("#fc2779")
-      .text("Item", 50)
-      .text("Qty", 300)
-      .text("Price", 370)
-      .text("Total", 450);
+      .text("Item", 50, tableTop)
+      .text("Qty", 250, tableTop)
+      .text("Price", 350, tableTop)
+      .text("Total", 450, tableTop);
 
-    doc.moveTo(50, doc.y + 5).lineTo(550, doc.y + 5).stroke();
-    doc.moveDown();
+    doc.moveTo(50, tableTop + 15).lineTo(550, tableTop + 15).stroke();
+
+    // ================= PRODUCTS =================
+    let y = tableTop + 30;
 
     doc.fillColor("black");
 
-    // ================= PRODUCTS =================
     if (order.items && order.items.length > 0) {
       order.items.forEach((item) => {
-        doc.text(item.name, 50);
-        doc.text(item.quantity || 1, 300, doc.y - 15);
-        doc.text(`₹${item.price}`, 370, doc.y - 15);
-        doc.text(`₹${item.price * (item.quantity || 1)}`, 450, doc.y - 15);
+        doc.text(item.name, 50, y);
+        doc.text(item.quantity || 1, 250, y);
+        doc.text(`₹${item.price}`, 350, y);
+        doc.text(`₹${item.price * (item.quantity || 1)}`, 450, y);
 
-        doc.moveDown();
+        y += 25;
       });
     } else {
-      doc.text("Product", 50);
-      doc.text("1", 300, doc.y - 15);
-      doc.text(`₹${order.totalAmount}`, 370, doc.y - 15);
-      doc.text(`₹${order.totalAmount}`, 450, doc.y - 15);
-      doc.moveDown();
+      doc.text("Product", 50, y);
+      doc.text("1", 250, y);
+      doc.text(`₹${order.totalAmount}`, 350, y);
+      doc.text(`₹${order.totalAmount}`, 450, y);
+      y += 25;
     }
 
     // ================= TOTAL SECTION =================
-    doc.moveTo(50, doc.y).lineTo(550, doc.y).stroke();
-    doc.moveDown();
+    y += 20;
 
-    doc.text("Subtotal", 350);
-    doc.text(`₹${order.totalAmount}`, 450, doc.y - 15);
+    doc.moveTo(300, y).lineTo(550, y).stroke();
 
-    doc.moveDown();
+    y += 10;
 
-    doc.text("GST (18%)", 350);
-    doc.text(`₹${gst.toFixed(2)}`, 450, doc.y - 15);
+    doc.text("Subtotal", 350, y);
+    doc.text(`₹${order.totalAmount}`, 450, y);
 
-    doc.moveDown();
+    y += 20;
 
-    doc.moveTo(350, doc.y).lineTo(550, doc.y).stroke();
-    doc.moveDown();
+    doc.text("GST (18%)", 350, y);
+    doc.text(`₹${gst.toFixed(2)}`, 450, y);
+
+    y += 20;
+
+    doc.moveTo(300, y).lineTo(550, y).stroke();
+
+    y += 10;
 
     doc
       .fontSize(13)
       .fillColor("#fc2779")
-      .text("Total", 350)
-      .text(`₹${finalTotal.toFixed(2)}`, 450, doc.y - 15);
-
-    doc.moveDown(3);
+      .text("Total", 350, y)
+      .text(`₹${finalTotal.toFixed(2)}`, 450, y);
 
     // ================= FOOTER =================
     doc
       .fontSize(12)
       .fillColor("#fc2779")
-      .text("Thank you for shopping with Nykaa 💖", {
+      .text("Thank you for shopping with Nykaa 💖", 0, y + 60, {
         align: "center",
       });
 
