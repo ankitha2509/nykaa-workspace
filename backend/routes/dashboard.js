@@ -1,4 +1,3 @@
-
 const express = require("express");
 const router = express.Router();
 
@@ -7,26 +6,23 @@ const Order = require("../models/Order");
 
 router.get("/stats", async (req, res) => {
   try {
-   
+    // 🔥 USERS
     const totalUsers = await User.countDocuments();
 
-
+    // 🔥 ORDERS
     const orders = await Order.find();
-
     const totalOrders = orders.length;
 
-  
+    // 🔥 SALES
     const totalSales = orders.reduce(
-      (sum, order) => sum + order.totalAmount,
+      (sum, order) => sum + (order.totalAmount || 0),
       0
     );
 
-  
     const totalGST = totalSales * 0.18;
-
-  
     const totalRevenue = totalSales + totalGST;
 
+    // 🔥 FIXED STATUS COUNT (IMPORTANT)
     const statusCount = {
       Completed: 0,
       Pending: 0,
@@ -34,11 +30,16 @@ router.get("/stats", async (req, res) => {
     };
 
     orders.forEach((order) => {
-      if (statusCount[order.status] !== undefined) {
-        statusCount[order.status]++;
-      }
+      const status = (order.status || "").toLowerCase();
+
+      if (status === "completed") statusCount.Completed++;
+      else if (status === "pending") statusCount.Pending++;
+      else if (status === "cancelled") statusCount.Cancelled++;
     });
 
+    console.log("STATUS COUNT:", statusCount); // DEBUG
+
+    // 🔥 MONTHLY SALES
     const monthlySales = {};
 
     orders.forEach((order) => {
@@ -50,7 +51,7 @@ router.get("/stats", async (req, res) => {
         monthlySales[month] = 0;
       }
 
-      monthlySales[month] += order.totalAmount;
+      monthlySales[month] += order.totalAmount || 0;
     });
 
     const salesData = Object.keys(monthlySales).map((month) => ({
