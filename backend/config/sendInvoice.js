@@ -40,9 +40,9 @@ const sendInvoice = async (email, order) => {
     await new Promise((resolve) => doc.on("finish", resolve));
 
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
+      from: `"Nykaa Clone" <${process.env.EMAIL_USER}>`,
       to: email,
-      subject: "Your Nykaa GST Invoice",
+      subject: "Your GST Invoice",
       text: "Thanks for your order. Invoice attached.",
       attachments: [
         {
