@@ -413,10 +413,12 @@ body {
 }
 
 .admin-product-card img {
-  width: 65%;
-  height: 250px;
-  object-fit: cover;
+  width: 100%;
+  height: 220px;
+  object-fit: contain;  
   border-radius: 10px;
+  background: #f9f9f9;   
+  padding: 10px;
 }
 
 .brand {
