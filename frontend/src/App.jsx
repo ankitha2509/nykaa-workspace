@@ -21,6 +21,7 @@ import Orders from "./pages/Orders";
 import ManageOrders from "./pages/ManageOrders";
 import ManageUsers from "./pages/ManageUsers";
 
+
 const stripePromise = loadStripe("pk_test_51TJfOQRlygTIqOImwHGH2rja3XMueVUmVrLZbu0TdyZKQS241szMjEyoeHiro8qCVlkW5ekcGyo24K34cKFsDnVP00zhAzQaAf");
 
 function App() {
@@ -36,30 +37,26 @@ function App() {
         <Route path="/signup" element={<Signup />} />
 
         <Route path="/admin" element={<Admin />} />
-
-        {/* ✅ FIXED ROUTE */}
-        <Route path="/admin/dashboard" element={<AdminDashboard />} />
-
+        <Route path="/admindashboard" element={<AdminDashboard />} />
         <Route path="/admin/add-product" element={<AddProduct />} />
         <Route path="/admin/view-products" element={<ViewProducts />} />
-        <Route path="/admin/manage-orders" element={<ManageOrders />} />
-        <Route path="/admin/manage-users" element={<ManageUsers />} />
-
         <Route path="/product/:id" element={<ProductDetails />} />
         <Route path="/cart" element={<Cart />} />
         <Route path="/address" element={<Address />} />
         <Route path="/orders" element={<Orders />} />
-
+        <Route path="/admin/manage-orders" element={<ManageOrders />} />
+        <Route path="/admin/manage-users" element={<ManageUsers />} /> 
+        
         <Route
           path="/payment"
           element={
-            stripePromise ? (
-              <Elements stripe={stripePromise}>
-                <Payment />
-              </Elements>
-            ) : (
-              <h2>LOADING PAYMENT.....</h2>
-            )
+            stripePromise ?(
+            <Elements stripe={stripePromise}>
+              <Payment />
+            </Elements>
+          ) : (
+            <h2>LOADING PAYMENT.....</h2>
+          )
           }
         />
 
