@@ -11,7 +11,6 @@ import {
 
 function AdminDashboard() {
   const navigate = useNavigate();
-
   const [stats, setStats] = useState(null);
 
   const logoutAdmin = () => {
@@ -19,13 +18,13 @@ function AdminDashboard() {
     navigate("/admin");
   };
 
-
   useEffect(() => {
     const fetchStats = async () => {
       try {
         const res = await axios.get(
           "https://backend-1bfu.onrender.com/api/dashboard/stats"
         );
+        console.log("STATS:", res.data); // DEBUG
         setStats(res.data);
       } catch (err) {
         console.log("Dashboard error:", err);
@@ -37,25 +36,31 @@ function AdminDashboard() {
 
   const COLORS = ["#fc2779", "#36A2EB", "#FFCE56"];
 
-  const ordersData = stats
-    ? [
-        { name: "Completed", value: stats.statusCount.Completed },
-        { name: "Pending", value: stats.statusCount.Pending },
-        { name: "Cancelled", value: stats.statusCount.Cancelled },
-      ]
-    : [];
+  const ordersData = [
+    {
+      name: "Completed",
+      value: stats?.statusCount?.Completed || 0,
+    },
+    {
+      name: "Pending",
+      value: stats?.statusCount?.Pending || 0,
+    },
+    {
+      name: "Cancelled",
+      value: stats?.statusCount?.Cancelled || 0,
+    },
+  ];
 
   return (
     <div className="admin-wrapper">
 
-   
       <header className="admin-header">
-        <div className="logo"> NYKAA ADMIN PANEL</div>
+        <div className="logo">💄 NYKAA ADMIN PANEL</div>
       </header>
 
       <div className="admin-body">
 
-        
+        {/* SIDEBAR */}
         <div className="sidebar">
           <div>
             <div className="menu-section">
@@ -83,13 +88,12 @@ function AdminDashboard() {
           </div>
         </div>
 
-        
+        {/* MAIN */}
         <div className="main-content">
           <h1>Dashboard Overview</h1>
 
-       
+          {/* CARDS */}
           <div className="dashboard-cards">
-
             <div className="card">
               <h3>💰 Total Sales</h3>
               <p>₹{stats?.totalSales || 0}</p>
@@ -109,12 +113,12 @@ function AdminDashboard() {
               <h3>💳 Revenue</h3>
               <p>₹{stats?.totalRevenue || 0}</p>
             </div>
-
           </div>
 
+          {/* CHARTS */}
           <div className="charts-grid">
 
-        
+            {/* LINE */}
             <div className="chart-card">
               <h3>Sales Trend</h3>
               <ResponsiveContainer width="100%" height={250}>
@@ -128,24 +132,32 @@ function AdminDashboard() {
               </ResponsiveContainer>
             </div>
 
-          
+            {/* PIE */}
             <div className="chart-card">
               <h3>Orders Status</h3>
-              <ResponsiveContainer width="100%" height={250}>
-                <PieChart>
-                  <Pie
-                    data={ordersData}
-                    dataKey="value"
-                    outerRadius={80}
-                    label
-                  >
-                    {ordersData.map((entry, index) => (
-                      <Cell key={index} fill={COLORS[index]} />
-                    ))}
-                  </Pie>
-                  <Tooltip />
-                </PieChart>
-              </ResponsiveContainer>
+
+              {ordersData.some(d => d.value > 0) ? (
+                <ResponsiveContainer width="100%" height={250}>
+                  <PieChart>
+                    <Pie
+                      data={ordersData}
+                      dataKey="value"
+                      outerRadius={80}
+                      label
+                    >
+                      {ordersData.map((entry, index) => (
+                        <Cell key={index} fill={COLORS[index]} />
+                      ))}
+                    </Pie>
+                    <Tooltip />
+                  </PieChart>
+                </ResponsiveContainer>
+              ) : (
+                <p style={{ textAlign: "center", marginTop: "50px" }}>
+                  No order data available
+                </p>
+              )}
+
             </div>
 
           </div>
