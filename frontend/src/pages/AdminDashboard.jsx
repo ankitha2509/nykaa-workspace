@@ -16,7 +16,6 @@ function AdminDashboard() {
     navigate("/admin");
   };
 
-  // SAMPLE DATA
   const salesData = [
     { month: "Jan", sales: 4000 },
     { month: "Feb", sales: 3000 },
@@ -42,14 +41,12 @@ function AdminDashboard() {
   return (
     <div className="admin-wrapper">
 
-      {/* HEADER */}
       <header className="admin-header">
         <div className="logo">NYKAA ADMIN</div>
       </header>
 
       <div className="admin-body">
 
-        {/* SIDEBAR */}
         <div className="sidebar">
 
           <div>
@@ -69,55 +66,29 @@ function AdminDashboard() {
                 <li onClick={() => navigate("/admin/manage-users")}>Manage Users</li>
               </ul>
             </div>
-
-            <div className="menu-section">
-              <p className="menu-title">SUPPORT</p>
-              <ul>
-                <li onClick={() => navigate("/admin/help")}>Help Center</li>
-              </ul>
-            </div>
           </div>
 
-          <div className="logout-section">
-            <button className="logout-btn" onClick={logoutAdmin}>
-              Logout
-            </button>
-          </div>
+          <button className="logout-btn" onClick={logoutAdmin}>
+            Logout
+          </button>
 
         </div>
 
-        {/* MAIN CONTENT */}
         <div className="main-content">
 
           <h1>Dashboard Overview</h1>
 
-          {/* ✅ TOP CARDS */}
+          {/* CARDS */}
           <div className="dashboard-cards">
-            <div className="card">
-              <h3>Total Sales</h3>
-              <h2>₹50,000</h2>
-            </div>
-
-            <div className="card">
-              <h3>Total Orders</h3>
-              <h2>120</h2>
-            </div>
-
-            <div className="card">
-              <h3>Users</h3>
-              <h2>85</h2>
-            </div>
-
-            <div className="card">
-              <h3>Revenue</h3>
-              <h2>₹75,000</h2>
-            </div>
+            <div className="card"><h3>Total Sales</h3><h2>₹50,000</h2></div>
+            <div className="card"><h3>Total Orders</h3><h2>120</h2></div>
+            <div className="card"><h3>Users</h3><h2>85</h2></div>
+            <div className="card"><h3>Revenue</h3><h2>₹75,000</h2></div>
           </div>
 
-          {/* ✅ CHARTS */}
+          {/* CHARTS */}
           <div className="charts-grid">
 
-            {/* LINE */}
             <div className="chart-card">
               <h3>Sales Trend</h3>
               <ResponsiveContainer width="100%" height={250}>
@@ -131,7 +102,6 @@ function AdminDashboard() {
               </ResponsiveContainer>
             </div>
 
-            {/* BAR */}
             <div className="chart-card">
               <h3>User Growth</h3>
               <ResponsiveContainer width="100%" height={250}>
@@ -145,21 +115,13 @@ function AdminDashboard() {
               </ResponsiveContainer>
             </div>
 
-            {/* PIE */}
             <div className="chart-card">
               <h3>Orders Status</h3>
               <ResponsiveContainer width="100%" height={250}>
                 <PieChart>
-                  <Pie
-                    data={ordersData}
-                    dataKey="value"
-                    cx="50%"
-                    cy="50%"
-                    outerRadius={80}
-                    label
-                  >
-                    {ordersData.map((entry, index) => (
-                      <Cell key={index} fill={COLORS[index]} />
+                  <Pie data={ordersData} dataKey="value" outerRadius={80}>
+                    {ordersData.map((_, i) => (
+                      <Cell key={i} fill={COLORS[i]} />
                     ))}
                   </Pie>
                   <Tooltip />
