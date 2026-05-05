@@ -35,10 +35,6 @@ function AdminDashboard() {
               <li onClick={() => navigate("/admin/view-products")}>
                 View Products
               </li>
-
-              <li onClick={() => navigate("/admin/view-admin")}>
-                View Admin
-              </li>
             </ul>
           </div>
 
@@ -47,9 +43,6 @@ function AdminDashboard() {
             <p className="menu-title">ACCOUNT</p>
 
             <ul>
-              <li onClick={() => navigate("/admin/settings")}>
-                Settings
-              </li>
 
               <li onClick={() => navigate("/admin/manage-orders")}>
                 Manage Orders
@@ -72,10 +65,12 @@ function AdminDashboard() {
           </div>
 
           <div className="logout-section">
-            <button onClick={logoutAdmin}>
-              Logout
-            </button>
-          </div>
+  <button className="logout-btn" onClick={logoutAdmin}>
+    Logout
+  </button>
+</div>
+
+         
 
         </div>
 
