@@ -3,6 +3,8 @@ const PDFDocument = require("pdfkit");
 const fs = require("fs");
 const path = require("path");
 
+console.log("📦 sendInvoice module loaded");
+
 const transporter = nodemailer.createTransport({
   service: "gmail",
   auth: {
@@ -13,6 +15,12 @@ const transporter = nodemailer.createTransport({
 
 const sendInvoice = async (email, order) => {
   try {
+    // 🔥 DEBUG LOGS (ADD HERE)
+    console.log("📩 sendInvoice STARTED");
+    console.log("TO:", email);
+    console.log("ENV EMAIL_USER:", process.env.EMAIL_USER);
+    console.log("ENV EMAIL_PASS EXISTS:", !!process.env.EMAIL_PASS);
+
     const fileName = `invoice-${order._id}.pdf`;
     const filePath = path.join(__dirname, fileName);
 
@@ -29,8 +37,8 @@ const sendInvoice = async (email, order) => {
     doc.text(`Name: ${order.name}`);
     doc.text(`Phone: ${order.phone}`);
     doc.text(`Address: ${order.address}`);
-    doc.moveDown();
 
+    doc.moveDown();
     doc.text(`Subtotal: ₹${order.totalAmount}`);
     doc.text(`GST (18%): ₹${gst.toFixed(2)}`);
     doc.text(`Total: ₹${finalTotal.toFixed(2)}`);
@@ -38,6 +46,8 @@ const sendInvoice = async (email, order) => {
     doc.end();
 
     await new Promise((resolve) => doc.on("finish", resolve));
+
+    console.log("📄 PDF generated, sending email...");
 
     await transporter.sendMail({
       from: `"Nykaa Clone" <${process.env.EMAIL_USER}>`,
@@ -52,12 +62,12 @@ const sendInvoice = async (email, order) => {
       ]
     });
 
+    console.log("📧 Email SENT SUCCESSFULLY");
+
     fs.unlinkSync(filePath);
 
-    console.log("Invoice sent successfully");
-
   } catch (err) {
-    console.log("Email Error:", err.message);
+    console.log("❌ Email Error FULL:", err);
   }
 };
 
