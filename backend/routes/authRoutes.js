@@ -9,8 +9,6 @@ const generateOTP = () => {
 };
 
 
-
-// ================= SIGNUP =================
 router.post("/signup/send-otp", async (req, res) => {
   try {
     const { name, mobile, email } = req.body;
@@ -21,7 +19,6 @@ router.post("/signup/send-otp", async (req, res) => {
       });
     }
 
-    // ✅ check both email + mobile
     const existingUser = await User.findOne({
       $or: [{ email }, { mobile }]
     });
@@ -34,10 +31,8 @@ router.post("/signup/send-otp", async (req, res) => {
 
     const otp = generateOTP();
 
-    // ✅ send email first
     await sendEmail(email, otp);
 
-    // ✅ then save user
     const newUser = new User({
       name,
       mobile,
@@ -62,7 +57,6 @@ router.post("/signup/send-otp", async (req, res) => {
 
 
 
-// ================= LOGIN =================
 router.post("/login/send-otp", async (req, res) => {
   try {
     const { email } = req.body;
@@ -103,8 +97,6 @@ router.post("/login/send-otp", async (req, res) => {
 });
 
 
-
-// ================= VERIFY OTP =================
 router.post("/verify-otp", async (req, res) => {
   try {
     const { email, otp } = req.body;
@@ -117,7 +109,6 @@ router.post("/verify-otp", async (req, res) => {
       });
     }
 
-    // ✅ safe comparison
     if (
       String(user.otp) !== String(otp) ||
       !user.otpExpires ||
@@ -159,8 +150,6 @@ router.post("/verify-otp", async (req, res) => {
 });
 
 
-
-// ================= GET USER =================
 router.get("/user/:id", async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
@@ -173,8 +162,6 @@ router.get("/user/:id", async (req, res) => {
 });
 
 
-
-// ================= UPDATE USER =================
 router.put("/update/:id", async (req, res) => {
   try {
     const { name, gender, mobile } = req.body;
