@@ -20,17 +20,19 @@ router.get("/stats", async (req, res) => {
     const totalRevenue = totalSales + totalGST;
 
     const statusCount = {
-      Completed: 0,
-      Pending: 0,
+      Processing: 0,
+      Packed: 0,
+      Shipped: 0,
+      Delivered: 0,
       Cancelled: 0,
     };
 
     orders.forEach((order) => {
-      const status = order.status?.toLowerCase();
+      const status = order.status || "Processing";
 
-      if (status === "completed") statusCount.Completed++;
-      else if (status === "pending") statusCount.Pending++;
-      else if (status === "cancelled") statusCount.Cancelled++;
+      if (statusCount[status] !== undefined) {
+        statusCount[status]++;
+      }
     });
 
     const monthlySales = {};
@@ -49,8 +51,6 @@ router.get("/stats", async (req, res) => {
       month,
       sales: monthlySales[month],
     }));
-
-    console.log("STATUS COUNT:", statusCount); 
 
     res.json({
       totalUsers,

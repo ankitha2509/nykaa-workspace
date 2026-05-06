@@ -75,12 +75,9 @@ router.post("/create/:userId", async (req, res) => {
 
   } catch (err) {
     console.log(err);
-    res.status(500).json({
-      message: "Error placing order",
-    });
+    res.status(500).json({ message: "Error placing order" });
   }
 });
-
 
 router.get("/:userId", async (req, res) => {
   try {
@@ -90,9 +87,7 @@ router.get("/:userId", async (req, res) => {
     res.json(orders);
 
   } catch (err) {
-    res.status(500).json({
-      message: "Error fetching orders",
-    });
+    res.status(500).json({ message: "Error fetching orders" });
   }
 });
 
