@@ -22,14 +22,12 @@ const sendInvoice = async (email, order) => {
     const stream = fs.createWriteStream(filePath);
     doc.pipe(stream);
 
-    // ================= LOGO =================
     const logoPath = path.join(__dirname, "../assets/nykaa-logo.png");
 
     if (fs.existsSync(logoPath)) {
       doc.image(logoPath, 50, 40, { width: 90 });
     }
 
-    // ================= COMPANY INFO (RIGHT) =================
     doc
       .fontSize(10)
       .fillColor("gray")
@@ -37,13 +35,11 @@ const sendInvoice = async (email, order) => {
       .text("Mumbai, India", 400, 55)
       .text("GSTIN: 27AAACN1234A1Z5", 400, 70);
 
-    // ================= TITLE =================
     doc
       .fontSize(20)
       .fillColor("#fc2779")
       .text("GST INVOICE", 0, 120, { align: "center" });
 
-    // ================= META =================
     const date = new Date().toLocaleDateString();
 
     doc
@@ -52,10 +48,8 @@ const sendInvoice = async (email, order) => {
       .text(`Invoice No: INV-${order._id}`, 50, 160)
       .text(`Date: ${date}`, 400, 160);
 
-    // ================= LINE =================
     doc.moveTo(50, 185).lineTo(550, 185).stroke();
 
-    // ================= BILL TO =================
     doc.fontSize(12).text("Bill To:", 50, 200);
 
     doc
@@ -64,7 +58,6 @@ const sendInvoice = async (email, order) => {
       .text(order.address, 50, 235)
       .text(order.phone, 50, 250);
 
-    // ================= TABLE HEADER =================
     const tableTop = 300;
 
     doc
@@ -77,7 +70,6 @@ const sendInvoice = async (email, order) => {
 
     doc.moveTo(50, tableTop + 15).lineTo(550, tableTop + 15).stroke();
 
-    // ================= PRODUCTS =================
     let y = tableTop + 30;
 
     doc.fillColor("black");
@@ -99,7 +91,6 @@ const sendInvoice = async (email, order) => {
       y += 25;
     }
 
-    // ================= TOTAL SECTION =================
     y += 20;
 
     doc.moveTo(300, y).lineTo(550, y).stroke();
@@ -126,11 +117,10 @@ const sendInvoice = async (email, order) => {
       .text("Total", 350, y)
       .text(`₹${finalTotal.toFixed(2)}`, 450, y);
 
-    // ================= FOOTER =================
     doc
       .fontSize(12)
       .fillColor("#fc2779")
-      .text("Thank you for shopping with Nykaa 💖", 0, y + 60, {
+      .text("Thank you for shopping with Nykaa", 0, y + 60, {
         align: "center",
       });
 
@@ -150,7 +140,6 @@ const sendInvoice = async (email, order) => {
 
     console.log("PDF GENERATED");
 
-    // ================= EMAIL =================
     await resend.emails.send({
       from: "Nykaa <onboarding@resend.dev>",
       to: email,
