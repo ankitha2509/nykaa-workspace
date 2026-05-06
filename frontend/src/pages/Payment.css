@@ -3,24 +3,25 @@
   grid-template-columns: 2fr 1fr;
   gap: 28px;
   padding: 40px;
-  background: #f8f8fb;
+  background: #f5f5f5;
   min-height: 100vh;
   font-family: "Segoe UI", sans-serif;
 }
 
 .payment-left {
   background: #ffffff;
-  border-radius: 22px;
+  border-radius: 20px;
   padding: 32px;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.06);
 }
 
 .payment-left h2 {
   font-size: 28px;
+  color: #111;
 }
 
 .subtitle {
-  color: #777;
+  color: #666;
   margin-bottom: 20px;
 }
 
@@ -32,20 +33,21 @@
 
 .option {
   padding: 16px;
-  border-radius: 14px;
+  border-radius: 12px;
   border: 1px solid #ddd;
   cursor: pointer;
   font-weight: 600;
-  transition: 0.3s;
+  background: #fff;
+  transition: 0.25s ease;
 }
 
 .option:hover {
-  border-color: #fc2779;
+  border-color: #000;
 }
 
 .option.active {
-  background: #fff1f7;
-  border-color: #fc2779;
+  background: #f2f2f2;
+  border-color: #000;
 }
 
 .card-box {
@@ -53,6 +55,7 @@
   padding: 16px;
   background: #fafafa;
   border-radius: 12px;
+  border: 1px solid #e5e5e5;
 }
 
 .StripeElement {
@@ -67,14 +70,15 @@
   padding: 15px;
   border: none;
   border-radius: 12px;
-  background: #fc2779;
+  background: #111;
   color: white;
   font-weight: bold;
   cursor: pointer;
+  transition: 0.3s ease;
 }
 
 .place-btn:hover {
-  opacity: 0.9;
+  background: #000;
 }
 
 .payment-right {
@@ -84,7 +88,7 @@
 }
 
 .card {
-  background: white;
+  background: #ffffff;
   border-radius: 16px;
   padding: 20px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
@@ -92,13 +96,24 @@
 
 .card h4 {
   margin-bottom: 12px;
+  color: #111;
+}
+
+.card p {
+  color: #444;
+  font-size: 14px;
 }
 
 .bag-item {
   display: flex;
   align-items: center;
   gap: 12px;
-  margin-bottom: 10px;
+  padding: 8px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.bag-item:last-child {
+  border-bottom: none;
 }
 
 .bag-item img {
@@ -113,25 +128,27 @@
   color: #777;
 }
 
-/* PRICE */
 .price-row {
   display: flex;
   justify-content: space-between;
   margin: 6px 0;
+  color: #333;
 }
 
 .price-row.total {
   font-weight: bold;
   font-size: 16px;
+  color: #000;
 }
 
 .free {
-  color: green;
+  color: #000;
+  font-weight: 500;
 }
 
 .secure-text {
   font-size: 12px;
-  color: #888;
+  color: #777;
   margin-top: 8px;
 }
 
