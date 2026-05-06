@@ -19,7 +19,6 @@ router.get("/stats", async (req, res) => {
     const totalGST = totalSales * 0.18;
     const totalRevenue = totalSales + totalGST;
 
-    // ✅ FIXED STATUS COUNT (CASE SAFE)
     const statusCount = {
       Completed: 0,
       Pending: 0,
@@ -34,7 +33,6 @@ router.get("/stats", async (req, res) => {
       else if (status === "cancelled") statusCount.Cancelled++;
     });
 
-    // ✅ MONTHLY SALES
     const monthlySales = {};
 
     orders.forEach((order) => {
@@ -52,7 +50,7 @@ router.get("/stats", async (req, res) => {
       sales: monthlySales[month],
     }));
 
-    console.log("STATUS COUNT:", statusCount); // 🔥 DEBUG
+    console.log("STATUS COUNT:", statusCount); 
 
     res.json({
       totalUsers,

@@ -7,7 +7,6 @@ const User = require("../models/User");
 
 const sendInvoice = require("../config/sendInvoice");
 
-// CREATE ORDER
 router.post("/create/:userId", async (req, res) => {
   try {
     const userId = req.params.userId;
@@ -55,7 +54,6 @@ router.post("/create/:userId", async (req, res) => {
 
     const user = await User.findById(userId);
 
-    // ✅ NON-BLOCKING EMAIL
     if (user?.email) {
       sendInvoice(user.email, order)
         .then(() => console.log("Invoice sent"))
@@ -77,8 +75,6 @@ router.post("/create/:userId", async (req, res) => {
   }
 });
 
-
-// GET ORDERS
 router.get("/:userId", async (req, res) => {
   try {
     const orders = await Order.find({ userId: req.params.userId })
