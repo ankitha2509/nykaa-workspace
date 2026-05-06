@@ -34,26 +34,28 @@ function AdminDashboard() {
     fetchStats();
   }, []);
 
-  const COLORS = ["#fc2779", "#36A2EB", "#FFCE56"];
-
   const ordersData = [
-    { name: "Completed", value: stats?.statusCount?.Completed || 0 },
-    { name: "Pending", value: stats?.statusCount?.Pending || 0 },
+    { name: "Processing", value: stats?.statusCount?.Processing || 0 },
+    { name: "Packed", value: stats?.statusCount?.Packed || 0 },
+    { name: "Shipped", value: stats?.statusCount?.Shipped || 0 },
+    { name: "Delivered", value: stats?.statusCount?.Delivered || 0 },
     { name: "Cancelled", value: stats?.statusCount?.Cancelled || 0 },
   ];
+
+  const COLORS = ["#111", "#444", "#777", "#00C49F", "#FF4D4F"];
 
   return (
     <div className="admin-wrapper">
 
       <header className="admin-header">
-        <div className="logo">💄 NYKAA ADMIN PANEL</div>
+        <div className="logo">NYKAA ADMIN PANEL</div>
       </header>
 
       <div className="admin-body">
 
-        {/* SIDEBAR */}
         <div className="sidebar">
           <div>
+
             <div className="menu-section">
               <p className="menu-title">GENERAL</p>
               <ul>
@@ -70,6 +72,7 @@ function AdminDashboard() {
                 <li onClick={() => navigate("/admin/manage-users")}>Manage Users</li>
               </ul>
             </div>
+
           </div>
 
           <div className="logout-section">
@@ -79,51 +82,56 @@ function AdminDashboard() {
           </div>
         </div>
 
-        {/* MAIN */}
         <div className="main-content">
+
           <h1>Dashboard Overview</h1>
 
-          {/* CARDS */}
           <div className="dashboard-cards">
+
             <div className="card">
-              <h3>💰 Total Sales</h3>
+              <h3>Total Sales</h3>
               <p>₹{stats?.totalSales || 0}</p>
             </div>
 
             <div className="card">
-              <h3>📦 Orders</h3>
+              <h3>Orders</h3>
               <p>{stats?.totalOrders || 0}</p>
             </div>
 
             <div className="card">
-              <h3>👤 Users</h3>
+              <h3>Users</h3>
               <p>{stats?.totalUsers || 0}</p>
             </div>
 
             <div className="card">
-              <h3>💳 Revenue</h3>
+              <h3>Revenue</h3>
               <p>₹{stats?.totalRevenue || 0}</p>
             </div>
+
           </div>
 
-          {/* CHARTS */}
           <div className="charts-grid">
 
-            {/* LINE */}
             <div className="chart-card">
               <h3>Sales Trend</h3>
+
               <ResponsiveContainer width="100%" height={250}>
                 <LineChart data={stats?.salesData || []}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis />
                   <Tooltip />
-                  <Line type="monotone" dataKey="sales" stroke="#fc2779" />
+                  <Line
+                    type="monotone"
+                    dataKey="sales"
+                    stroke="#111"
+                    strokeWidth={2}
+                  />
                 </LineChart>
               </ResponsiveContainer>
+
             </div>
 
-            {/* PIE */}
             <div className="chart-card">
               <h3>Orders Status</h3>
 
@@ -152,6 +160,7 @@ function AdminDashboard() {
             </div>
 
           </div>
+
         </div>
       </div>
     </div>

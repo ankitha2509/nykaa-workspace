@@ -30,7 +30,7 @@ function Orders() {
             <h4>Order ID: {order._id}</h4>
 
             <p>
-              Status: {order.status ? order.status : "Processing"}
+              Status: <strong>{order.status || "Processing"}</strong>
             </p>
 
             <p>Payment: {order.paymentMethod}</p>
@@ -38,7 +38,7 @@ function Orders() {
             <div>
               {order.items?.map((item) => (
                 <p key={item._id}>
-                  {item.productId?.name} × {item.quantity}
+                  {item.productId?.name || "Product"} × {item.quantity}
                 </p>
               ))}
             </div>
