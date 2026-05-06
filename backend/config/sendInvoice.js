@@ -12,18 +12,19 @@ const sendInvoice = async (email, order) => {
     if (!email) throw new Error("No email provided");
     if (!order) throw new Error("No order data provided");
 
+    console.log("ORDER DATA:", order); 
     const fileName = `invoice-${order._id}.pdf`;
     const filePath = path.join("/tmp", fileName);
 
-    const gst = order.totalAmount * 0.18;
-    const finalTotal = order.totalAmount + gst;
+    const subtotal = order.totalAmount || 0;
+    const gst = subtotal * 0.18;
+    const finalTotal = subtotal + gst;
 
     const doc = new PDFDocument({ margin: 50 });
     const stream = fs.createWriteStream(filePath);
     doc.pipe(stream);
 
     const logoPath = path.join(__dirname, "../assets/nykaa-logo.png");
-
     if (fs.existsSync(logoPath)) {
       doc.image(logoPath, 50, 40, { width: 90 });
     }
@@ -37,7 +38,7 @@ const sendInvoice = async (email, order) => {
 
     doc
       .fontSize(20)
-      .fillColor("#fc2779")
+      .fillColor("black")
       .text("GST INVOICE", 0, 120, { align: "center" });
 
     const date = new Date().toLocaleDateString();
@@ -54,15 +55,15 @@ const sendInvoice = async (email, order) => {
 
     doc
       .fontSize(11)
-      .text(order.name, 50, 220)
-      .text(order.address, 50, 235)
-      .text(order.phone, 50, 250);
+      .text(order.name || "Customer", 50, 220)
+      .text(order.address || "-", 50, 235)
+      .text(order.phone || "-", 50, 250);
 
     const tableTop = 300;
 
     doc
       .fontSize(12)
-      .fillColor("#fc2779")
+      .fillColor("black")
       .text("Item", 50, tableTop)
       .text("Qty", 250, tableTop)
       .text("Price", 350, tableTop)
@@ -72,22 +73,34 @@ const sendInvoice = async (email, order) => {
 
     let y = tableTop + 30;
 
-    doc.fillColor("black");
-
     if (order.items && order.items.length > 0) {
       order.items.forEach((item) => {
-        doc.text(item.name, 50, y);
-        doc.text(item.quantity || 1, 250, y);
-        doc.text(`₹${item.price}`, 350, y);
-        doc.text(`₹${item.price * (item.quantity || 1)}`, 450, y);
+        const name =
+          item.productId?.name ||
+          item.name ||
+          "Product";
+
+        const price =
+          item.productId?.price ||
+          item.price ||
+          0;
+
+        const qty = item.quantity || 1;
+        const total = price * qty;
+
+        doc.text(name, 50, y);
+        doc.text(qty.toString(), 250, y);
+        doc.text(`₹${price}`, 350, y);
+        doc.text(`₹${total}`, 450, y);
 
         y += 25;
       });
     } else {
+      // FALLBACK
       doc.text("Product", 50, y);
       doc.text("1", 250, y);
-      doc.text(`₹${order.totalAmount}`, 350, y);
-      doc.text(`₹${order.totalAmount}`, 450, y);
+      doc.text(`₹${subtotal}`, 350, y);
+      doc.text(`₹${subtotal}`, 450, y);
       y += 25;
     }
 
@@ -98,7 +111,7 @@ const sendInvoice = async (email, order) => {
     y += 10;
 
     doc.text("Subtotal", 350, y);
-    doc.text(`₹${order.totalAmount}`, 450, y);
+    doc.text(`₹${subtotal}`, 450, y);
 
     y += 20;
 
@@ -113,13 +126,13 @@ const sendInvoice = async (email, order) => {
 
     doc
       .fontSize(13)
-      .fillColor("#fc2779")
+      .fillColor("black")
       .text("Total", 350, y)
       .text(`₹${finalTotal.toFixed(2)}`, 450, y);
 
     doc
       .fontSize(12)
-      .fillColor("#fc2779")
+      .fillColor("black")
       .text("Thank you for shopping with Nykaa", 0, y + 60, {
         align: "center",
       });
@@ -160,7 +173,6 @@ const sendInvoice = async (email, order) => {
     }
 
     return true;
-
   } catch (err) {
     console.log("ERROR:", err);
     return false;

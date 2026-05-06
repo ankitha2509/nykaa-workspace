@@ -18,7 +18,7 @@ router.post("/create/:userId", async (req, res) => {
       address2,
       city,
       pincode,
-      paymentMethod
+      paymentMethod,
     } = req.body;
 
     const fullAddress = `${address1}, ${address2}, ${city} - ${pincode}`;
@@ -32,11 +32,14 @@ router.post("/create/:userId", async (req, res) => {
     let totalAmount = 0;
 
     const items = cartItems.map((item) => {
-      totalAmount += item.productId.price * item.quantity;
+      const price = item.productId?.price || 0;
+      const qty = item.quantity || 1;
+
+      totalAmount += price * qty;
 
       return {
         productId: item.productId._id,
-        quantity: item.quantity
+        quantity: qty,
       };
     });
 
@@ -47,15 +50,18 @@ router.post("/create/:userId", async (req, res) => {
       address: fullAddress,
       items,
       totalAmount,
-      paymentMethod
+      paymentMethod,
     });
 
     await order.save();
 
+    const populatedOrder = await Order.findById(order._id)
+      .populate("items.productId");
+
     const user = await User.findById(userId);
 
     if (user?.email) {
-      sendInvoice(user.email, order)
+      sendInvoice(user.email, populatedOrder)
         .then(() => console.log("Invoice sent"))
         .catch((err) => console.log("Email error:", err.message));
     }
@@ -64,16 +70,17 @@ router.post("/create/:userId", async (req, res) => {
 
     res.json({
       message: "Order placed successfully 🎉",
-      orderId: order._id
+      orderId: order._id,
     });
 
   } catch (err) {
     console.log(err);
     res.status(500).json({
-      message: "Error placing order"
+      message: "Error placing order",
     });
   }
 });
+
 
 router.get("/:userId", async (req, res) => {
   try {
@@ -84,7 +91,7 @@ router.get("/:userId", async (req, res) => {
 
   } catch (err) {
     res.status(500).json({
-      message: "Error fetching orders"
+      message: "Error fetching orders",
     });
   }
 });
